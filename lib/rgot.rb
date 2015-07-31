@@ -8,8 +8,14 @@ module Rgot
   end
 
   class << self
-    def now
-      Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    if "2.0.0" < RUBY_VERSION
+      def now
+        Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      end
+    else
+      def now
+        Time.now
+      end
     end
   end
 end
