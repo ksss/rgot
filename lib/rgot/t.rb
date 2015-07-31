@@ -2,15 +2,15 @@ module Rgot
   class T < Common
     def initialize(test_module, name, opts={})
       super()
-      @test_module = test_module
+      @module = test_module
       @name = name
       @opts = opts
     end
 
     def run
       begin
-        @test_module.extend @test_module
-        @test_module.instance_method(@name).bind(@test_module).call(self)
+        @module.extend @module
+        @module.instance_method(@name).bind(@module).call(self)
         finished!
       rescue => e
         fail!
