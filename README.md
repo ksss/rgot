@@ -1,6 +1,8 @@
 rgot
 ===
 
+[![Build Status](https://travis-ci.org/ksss/rgot.svg)](https://travis-ci.org/ksss/rgot)
+
 RGOT is a Ruby Golang like Testing package.
 
 ### usage
