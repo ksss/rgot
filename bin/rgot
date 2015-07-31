@@ -1,0 +1,65 @@
+#! /usr/bin/env ruby
+
+require 'rgot'
+USAGE = "rgot [file|dir] [-hv]"
+opts = {}
+parser = OptionParser.new do |o|
+  o.on '-v', '--verbose', "log all tests" do
+    opts[:verbose] = true
+  end
+end
+parser.parse!(ARGV)
+
+target = ARGV[0]
+
+if target
+  if File.file?(target)
+    require File.expand_path(target)
+  elsif File.directory?(target)
+    Dir.glob("./#{target}/**/*_test.rb") do |i|
+      require i
+    end
+  else
+    puts USAGE
+  end
+else
+  Dir.glob("./**/*_test.rb") do |i|
+    require i
+  end
+end
+
+cases = []
+mains = nil
+modules = Object.constants.select { |c|
+  next if c == :FileTest
+  /.*Test\z/ =~ c
+}
+
+if 1 != modules.length
+  puts "can not load module. found #{modules.join(', ')}"
+  exit 1
+end
+
+c = modules.first
+
+test_module = Object.const_get(c)
+test_module.instance_methods.grep(/\Atest_.*/).sort.each do |m|
+  if m == :test_main && mains.nil?
+    mains = [test_module, m]
+  else
+    cases << [test_module, m]
+  end
+end
+
+m = Rgot::M.new(cases, opts)
+duration = Rgot.now
+at_exit {
+  puts sprintf("ok\t%.3fs", Rgot.now - duration)
+}
+if mains
+  test_module, name = mains
+  test_module.extend test_module
+  test_module.instance_method(name).bind(test_module).call(m)
+else
+  exit m.run
+end
