@@ -28,8 +28,6 @@ else
   end
 end
 
-cases = []
-mains = nil
 modules = Object.constants.select { |c|
   next if c == :FileTest
   /.*Test\z/ =~ c
@@ -40,14 +38,16 @@ if 1 != modules.length
   exit 1
 end
 
+cases = []
+main = nil
 c = modules.first
 
 test_module = Object.const_get(c)
 test_module.instance_methods.grep(/\Atest_.*/).sort.each do |m|
-  if m == :test_main && mains.nil?
-    mains = [test_module, m]
+  if m == :test_main && main.nil?
+    main = Rgot::InternalTestType.new(test_module, m)
   else
-    cases << [test_module, m]
+    cases << Rgot::InternalTestType.new(test_module, m)
   end
 end
 
@@ -56,10 +56,9 @@ duration = Rgot.now
 at_exit {
   puts sprintf("ok\t%.3fs", Rgot.now - duration)
 }
-if mains
-  test_module, name = mains
-  test_module.extend test_module
-  test_module.instance_method(name).bind(test_module).call(m)
+if main
+  main.module.extend main.module
+  main.module.instance_method(main.name).bind(main.module).call(m)
 else
   exit m.run
 end

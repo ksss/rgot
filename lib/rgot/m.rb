@@ -20,11 +20,10 @@ module Rgot
 
     def run_tests
       ok = true
-      @cases.each do |c|
-        test_module, m = c
-        t = Rgot::T.new(test_module, m.to_sym, @opts)
+      @cases.each do |test|
+        t = Rgot::T.new(test.module, test.name.to_sym, @opts)
         if @opts[:verbose]
-          puts "=== RUN #{m}\n"
+          puts "=== RUN #{test.name}\n"
         end
         t.run
         t.report
