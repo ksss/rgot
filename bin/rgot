@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
-
+require 'optparse'
 require 'rgot'
+
 USAGE = "rgot [file|dir] [-hv]"
 opts = {}
 parser = OptionParser.new do |o|
