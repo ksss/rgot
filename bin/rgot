@@ -2,7 +2,6 @@
 require 'optparse'
 require 'rgot'
 
-USAGE = "rgot [file|dir] [-hv]"
 opts = {}
 parser = OptionParser.new do |o|
   o.on '-v', '--verbose', "log all tests" do
