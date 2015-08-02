@@ -4,8 +4,17 @@ require 'rgot'
 
 opts = {}
 parser = OptionParser.new do |o|
-  o.on '-v', '--verbose', "log all tests" do
-    opts[:verbose] = true
+  o.on '-v', '--verbose', "log all tests" do |arg|
+    opts[:verbose] = arg
+  end
+  o.on '-b', '--bench [regexp]', "benchmark" do |arg|
+    unless arg
+      raise Rgot::OptionError, "missing argument for flag --bench"
+    end
+    opts[:bench] = arg
+  end
+  o.on '--benchtime [sec]', "benchmark running time" do |arg|
+    opts[:benchtime] = arg
   end
 end
 parser.parse!(ARGV)
@@ -20,7 +29,7 @@ if target
       require i
     end
   else
-    puts USAGE
+    puts target
   end
 else
   Dir.glob("./**/*_test.rb") do |i|
@@ -38,20 +47,26 @@ if 1 != modules.length
   exit 1
 end
 
-cases = []
+tests = []
+benchmarks = []
 main = nil
 c = modules.first
 
 test_module = Object.const_get(c)
-test_module.instance_methods.grep(/\Atest_.*/).sort.each do |m|
+methods = test_module.instance_methods
+methods.grep(/\Atest_.*/).sort.each do |m|
   if m == :test_main && main.nil?
-    main = Rgot::InternalTestType.new(test_module, m)
+    main = Rgot::InternalTest.new(test_module, m)
   else
-    cases << Rgot::InternalTestType.new(test_module, m)
+    tests << Rgot::InternalTest.new(test_module, m)
   end
 end
 
-m = Rgot::M.new(cases, opts)
+methods.grep(/\Abenchmark_.*/).sort.each do |m|
+  benchmarks << Rgot::InternalBenchmark.new(test_module, m)
+end
+
+m = Rgot::M.new(tests: tests, benchmarks: benchmarks, opts: opts)
 duration = Rgot.now
 at_exit {
   puts sprintf("ok\t%.3fs", Rgot.now - duration)

@@ -1,10 +1,17 @@
 module Rgot
   autoload :VERSION, 'rgot/version'
   autoload :Common, 'rgot/common'
-  autoload :T, 'rgot/t'
   autoload :M, 'rgot/m'
+  autoload :T, 'rgot/t'
+  autoload :B, 'rgot/b'
 
-  class InternalTestType < Struct.new(:module, :name)
+  class OptionError < StandardError
+  end
+
+  class InternalTest < Struct.new(:module, :name)
+  end
+
+  class InternalBenchmark < Struct.new(:module, :name)
   end
 
   class << self

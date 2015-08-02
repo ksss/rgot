@@ -47,4 +47,12 @@ module RgotTest
       t.error("expect output 'end in main' got '#{@out}'")
     end
   end
+
+  def test_benchmark(b)
+    cmd = "bin/rgot test/benchmark_test.rb --benchtime 1 --bench sum"
+    out = `#{cmd}`
+    if /benchmark_sum\s+\d+\s+\d+\.\d+\s+ns\/op/ !~ out
+      t.error("expect output benchmark report. got #{out}")
+    end
+  end
 end
