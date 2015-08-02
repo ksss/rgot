@@ -3,7 +3,9 @@ rgot
 
 [![Build Status](https://travis-ci.org/ksss/rgot.svg)](https://travis-ci.org/ksss/rgot)
 
-RGOT is a Ruby Golang like Testing package.
+Ruby + Golang Testing = Rgot
+
+Rgot is a testing package convert from golang testing.
 
 ### usage
 

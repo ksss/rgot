@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["ksss"]
   spec.email         = ["co000ri@gmail.com"]
 
-  spec.summary       = %q{The Ruby GOlang like Testing module}
-  spec.description   = %q{rgot is golang like testing module in ruby}
+  spec.summary       = %q{Ruby + Golang Testing = Rgot}
+  spec.description   = %q{Rgot is a testing package convert from golang testing}
   spec.homepage      = "https://github.com/ksss/rgot"
   spec.license       = "MIT"
 
