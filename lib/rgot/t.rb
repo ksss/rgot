@@ -5,12 +5,12 @@ module Rgot
       @module = test_module
       @name = name
       @opts = opts
+      @module.extend @module
     end
 
     def run
       begin
-        @module.extend @module
-        @module.instance_method(@name).bind(@module).call(self)
+        call
         finished!
       rescue => e
         fail!
@@ -31,6 +31,10 @@ module Rgot
           printf template, "PASS", @name, duration, @output
         end
       end
+    end
+
+    def call
+      @module.instance_method(@name).bind(@module).call(self)
     end
   end
 end
