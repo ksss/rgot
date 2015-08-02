@@ -1,6 +1,7 @@
 module Rgot
   class M
-    def initialize(tests:, benchmarks:, opts:)
+    # Ruby-2.0.0 wants default value of keyword_argument
+    def initialize(tests: [], benchmarks: [], opts: {})
       @tests = tests
       @benchmarks = benchmarks
       @opts = opts
