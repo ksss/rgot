@@ -1,6 +1,6 @@
 require_relative './sample'
 
-module RgotTest
+module PassTest
   class TypeSum < Struct.new(:left, :right, :expect)
   end
 

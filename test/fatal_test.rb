@@ -1,6 +1,6 @@
 require_relative './sample'
 
-module RgotTest
+module FatalTest
   def test_fatal(t)
     s = Sample.new
     sum = s.sum(nil, nil)
