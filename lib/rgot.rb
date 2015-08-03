@@ -1,9 +1,9 @@
 module Rgot
-  autoload :VERSION, 'rgot/version'
-  autoload :Common, 'rgot/common'
-  autoload :M, 'rgot/m'
-  autoload :T, 'rgot/t'
-  autoload :B, 'rgot/b'
+  require 'rgot/version'
+  require 'rgot/common'
+  require 'rgot/m'
+  require 'rgot/t'
+  require 'rgot/b'
 
   class OptionError < StandardError
   end
