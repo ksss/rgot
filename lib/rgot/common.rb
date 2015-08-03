@@ -38,7 +38,7 @@ module Rgot
 
     def skip(*args)
       internal_log(sprintf(*args))
-      skip_now!
+      skip_now
     end
 
     def skip_now
@@ -54,10 +54,10 @@ module Rgot
 
     def fatal(msg)
       internal_log(msg)
-      fail_now!
+      fail_now
     end
 
-    def fail_now!
+    def fail_now
       fail!
       finish!
       throw :skip
