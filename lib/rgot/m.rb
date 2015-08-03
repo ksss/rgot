@@ -8,8 +8,12 @@ module Rgot
     end
 
     def run
-      test_ok = run_tests
-      benchmark_ok = run_benchmarks
+      test_ok = false
+      benchmark_ok = false
+      Timeout.timeout(@opts[:timeout].to_f) {
+        test_ok = run_tests
+        benchmark_ok = run_benchmarks
+      }
       if !test_ok || !benchmark_ok
         puts "FAIL"
         1

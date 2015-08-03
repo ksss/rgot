@@ -45,6 +45,22 @@ module RgotTest
     end
   end
 
+  def test_timeout(t)
+    cmd = "bin/rgot test/timeout_test.rb -v --timeout 0.1"
+    out, err, status = Open3.capture3(cmd)
+    if status.success?
+      t.error("expect process not success `#{cmd}` got #{status}")
+    end
+    if /`sleep': execution expired \(Timeout::Error\)/ !~ err
+      error_class = err.match(/\((.*?)\)/)[1]
+      t.log(err)
+      t.error("expect NoMethodError got #{error_class}")
+    end
+    if /^ok\s+\d/ =~ out
+      t.error("expect not print 'ok' got #{out}")
+    end
+  end
+
   def test_main_method(t)
     cmd = "bin/rgot test/main_test.rb -v"
     out = `#{cmd}`

@@ -16,6 +16,9 @@ parser = OptionParser.new do |o|
   o.on '--benchtime [sec]', "benchmark running time" do |arg|
     opts[:benchtime] = arg
   end
+  o.on '--timeout [sec]', "set timeout sec to testing" do |arg|
+    opts[:timeout] = arg
+  end
 end
 parser.parse!(ARGV)
 
@@ -69,7 +72,9 @@ end
 m = Rgot::M.new(tests: tests, benchmarks: benchmarks, opts: opts)
 duration = Rgot.now
 at_exit {
-  puts sprintf("ok\t%.3fs", Rgot.now - duration)
+  if !$!
+    puts sprintf("ok\t%.3fs", Rgot.now - duration)
+  end
 }
 if main
   main.module.extend main.module
