@@ -59,8 +59,8 @@ module Rgot
 
     def fail_now!
       fail!
-      @finished = true
-      exit 1
+      finish!
+      throw :skip
     end
 
     private
