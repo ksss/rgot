@@ -10,7 +10,7 @@ module Rgot
 
     def run
       begin
-        call
+        catch(:skip) { call }
         finished!
       rescue => e
         fail!

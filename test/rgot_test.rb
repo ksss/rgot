@@ -37,6 +37,14 @@ module RgotTest
     end
   end
 
+  def test_skip(t)
+    cmd = "bin/rgot test/skip_test.rb -v"
+    out = `#{cmd}`
+    if /skip testing/ !~ out
+      t.error("expect skip `#{cmd}` got #{out}")
+    end
+  end
+
   def test_main_method(t)
     cmd = "bin/rgot test/main_test.rb -v"
     out = `#{cmd}`

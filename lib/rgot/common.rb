@@ -36,6 +36,17 @@ module Rgot
       internal_log(sprintf(*args))
     end
 
+    def skip(*args)
+      internal_log(sprintf(*args))
+      skip_now!
+    end
+
+    def skip_now
+      skip!
+      finish!
+      throw :skip
+    end
+
     def error(*args)
       internal_log(sprintf(*args))
       fail!
