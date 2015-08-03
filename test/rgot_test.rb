@@ -30,6 +30,7 @@ module RgotTest
     end
     if /`sum': undefined method `\+' for nil:NilClass \(NoMethodError\)/ !~ err
       error_class = err.match(/\((.*?)\)/)[1]
+      t.log(err)
       t.error("expect NoMethodError got #{error_class}")
     end
     if /---\sFAIL:\s.*/ !~ out
