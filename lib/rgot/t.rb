@@ -11,7 +11,7 @@ module Rgot
     def run
       begin
         catch(:skip) { call }
-        finished!
+        finish!
       rescue => e
         fail!
         report
