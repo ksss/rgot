@@ -5,4 +5,8 @@ module MainTest
     puts "end in main"
     exit code
   end
+
+  def test_some_1(t)
+    puts "run testing"
+  end
 end

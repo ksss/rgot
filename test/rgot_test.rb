@@ -40,11 +40,8 @@ module RgotTest
   def test_main_method(t)
     cmd = "bin/rgot test/main_test.rb -v"
     out = `#{cmd}`
-    if /start in main/ !~ out
-      t.error("expect output 'start in main' got '#{@out}'")
-    end
-    if /end in main/ !~ out
-      t.error("expect output 'end in main' got '#{@out}'")
+    if /start in main.*?run testing.*?end in main/m !~ out
+      t.error("expect output start -> run -> end got '#{out}'")
     end
   end
 
