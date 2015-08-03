@@ -28,7 +28,7 @@ module Rgot
       @skipped = true
     end
 
-    def finished!
+    def finish!
       @finished = true
     end
 
