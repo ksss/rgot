@@ -70,7 +70,7 @@ module RgotTest
     end
   end
 
-  def test_benchmark(b)
+  def test_benchmark(t)
     cmd = "bin/rgot test/benchmark_test.rb --benchtime 1 --bench sum"
     out = `#{cmd}`
     if /benchmark_sum\s+\d+\s+\d+\.\d+\s+ns\/op/ !~ out
