@@ -100,6 +100,7 @@ Usage: rgot [options]
     -v, --verbose                    log all tests
     -b, --bench [regexp]             benchmark
         --benchtime [sec]            benchmark running time
+        --timeout [sec]              set timeout sec to testing
 ```
 
 ## Basic
@@ -146,6 +147,16 @@ Run testing with benchmark.
 
 Set `someone` if you only run benchmark to match `someone` method.(e.g. benchmark_someone_1)
 
+## Timeout
+
+```
+$ rgot target_file_test.rb --timeout 3
+```
+
+You can set timeout sec for testing (default 0).
+
+Fail testing and print raised exception message to STDERR if timeout.
+
 # Rgot::M (Main)
 
 Main method run first on testing.
@@ -181,6 +192,40 @@ module TestSomeCode
 end
 ```
 
+# Rgot::Common
+
+`Rgot::Common` is inherited to `Rgot::T` and `Rgot::B`
+
+`Rgot::Common` have some logging method.
+
+## Rgot::Common#log
+
+```ruby
+t.log("wooooo")
+```
+
+Write any log message.
+
+But this message to show need -v option.
+
+## Rgot::Common#error
+
+```ruby
+t.error("expect #{a} got #{b}")
+```
+
+Test fail and show some error message.
+
+## Rgot::Common#skip
+
+```ruby
+t.skip("this method was skipped")
+```
+
+Skip current testing method.
+
+And run to next testing method.
+
 # Rgot::T (Testing)
 
 Testing is a main usage of this package.
@@ -194,27 +239,9 @@ end
 
 The `t` variable is instance of `Rgot::T` class means Testing.
 
-`Rgot::T` have some logging method.
-
-## Rgot::T#log
-
-```ruby
-t.log("wooooo")
-```
-
-Write any log message.
-
-But this message to show need -v option.
-
-## Rgot::T#error
-
-```ruby
-t.error("expect #{a} got #{b}")
-```
-
-Test fail and show some error message.
-
 # Rgot::B (Benchmark)
+
+For Benchmark class.
 
 Can use log methods same as `Rgot::T` class
 
