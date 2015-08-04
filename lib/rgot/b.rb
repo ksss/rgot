@@ -9,7 +9,6 @@ module Rgot
       @opts = opts
       @benchtime = @opts.fetch(:benchtime, 1).to_f
       @timer_on = false
-      @start = Rgot.now
       @duration = 0
       @module.extend @module
     end
@@ -37,7 +36,6 @@ module Rgot
 
     def run
       n = 1
-      a = Rgot.now
       run_n(n)
       while !failed? && @duration < @benchtime && @n < 1e9
         if @duration < (@benchtime / 100.0)
