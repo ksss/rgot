@@ -1,7 +1,7 @@
 require 'ripper'
 
 module Rgot
-  class RipperExample < Ripper
+  class ExampleParser < Ripper
     attr_accessor :examples
     def initialize(code)
       super

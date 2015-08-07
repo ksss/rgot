@@ -73,7 +73,7 @@ module Rgot
           method.call
         end
         file = method.source_location[0]
-        r = RipperExample.new(File.read(file))
+        r = ExampleParser.new(File.read(file))
         r.parse
         e = r.examples.find{|e| e.name == example.name}
         if e && e.output.strip != out.strip

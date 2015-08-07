@@ -4,7 +4,7 @@ module Rgot
   require 'rgot/m'
   require 'rgot/t'
   require 'rgot/b'
-  require 'rgot/ripper_example'
+  require 'rgot/example_parser'
 
   class OptionError < StandardError
   end
