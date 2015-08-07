@@ -4,6 +4,7 @@ module Rgot
   require 'rgot/m'
   require 'rgot/t'
   require 'rgot/b'
+  require 'rgot/ripper_example'
 
   class OptionError < StandardError
   end
@@ -12,6 +13,12 @@ module Rgot
   end
 
   class InternalBenchmark < Struct.new(:module, :name)
+  end
+
+  class InternalExample < Struct.new(:module, :name)
+  end
+
+  class ExampleOutput < Struct.new(:name, :output)
   end
 
   class << self

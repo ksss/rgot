@@ -52,12 +52,13 @@ end
 
 tests = []
 benchmarks = []
+examples = []
 main = nil
 c = modules.first
 
 test_module = Object.const_get(c)
-methods = test_module.instance_methods
-methods.grep(/\Atest_.*/).sort.each do |m|
+methods = test_module.instance_methods.sort
+methods.grep(/\Atest_/).each do |m|
   if m == :test_main && main.nil?
     main = Rgot::InternalTest.new(test_module, m)
   else
@@ -65,11 +66,15 @@ methods.grep(/\Atest_.*/).sort.each do |m|
   end
 end
 
-methods.grep(/\Abenchmark_.*/).sort.each do |m|
+methods.grep(/\Abenchmark_/).each do |m|
   benchmarks << Rgot::InternalBenchmark.new(test_module, m)
 end
 
-m = Rgot::M.new(tests: tests, benchmarks: benchmarks, opts: opts)
+methods.grep(/\Aexample_?/).each do |m|
+  examples << Rgot::InternalExample.new(test_module, m)
+end
+
+m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
 duration = Rgot.now
 at_exit {
   if !$!

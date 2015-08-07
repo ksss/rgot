@@ -55,6 +55,76 @@ PASS
 ok	0.001s
 ```
 
+# Feature
+
+## Testing
+
+I provide a very simple testing feature to you.
+
+**Rgot** testing is quite different from *RSpec* and *MiniTest* etc.
+
+Rgot carve out a new world of testing.
+
+So, You check only bad case in testing.
+
+## Benchmark
+
+You can write simple benchmark script with testing.
+
+This benchmark to adjust the time automatically.
+
+```ruby
+module FooTest
+  def benchmark_something(b)
+    i = 0
+    while i < b.n
+      something(1)
+      i += 1
+    end
+  end
+end
+```
+
+`b.n` is automatically adjusted.
+
+## Example
+
+Rgot's example feature is the best and if you want to write the sample code of your library.
+
+While presenting the sample code, it will be able to test whether the display results match at the same time.
+
+```ruby
+module FooTest
+  class User
+    def initialize(name)
+      @name = name
+    end
+
+    def hello
+      "Hello #{@name}"
+    end
+  end
+
+  def example_something
+    user = User.new('ksss')
+    puts user.hello
+    # Output:
+    # Hello ksss
+  end
+
+  def example_fail
+    user = User.new('ksss')
+    puts user.hello
+    # Output:
+    # Hi ksss
+  end
+end
+```
+
+`example_fail` fail since output is different.
+
+So, you can notice that the sample code is wrong.
+
 # Naming convention
 
 ## Filename
@@ -63,16 +133,16 @@ Filename should be set '*_test.rb'
 
 ## Module name
 
-Module name should be set 'TestXXX'
+Module name should be set 'XxxTest'
 
-'XXX' can replace any string (in range of ruby module)
+'Xxx' can replace any string (in range of ruby module)
 
 Testing code file can split any number.
 
 But all file should be have one module (like golang package name).
 
 ```ruby
-module TestXXX
+module XxxTest
 end
 ```
 
@@ -83,7 +153,7 @@ Method name should be set 'test_*' for testing.
 And benchmark method should be set 'benchmark_*'.
 
 ```ruby
-module TestXXX
+module XxxTest
   def test_any_name(t)
   end
 

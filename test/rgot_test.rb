@@ -77,4 +77,33 @@ module RgotTest
       t.error("expect output benchmark report. got #{out}")
     end
   end
+
+  def test_example_pass(t)
+    cmd = "bin/rgot test/example_pass_test.rb"
+    out = `#{cmd}`.chomp
+    if "PASS" != out
+      t.error("want PASS got '#{out}'")
+    end
+  end
+
+  def test_example_fail(t)
+    cmd = "bin/rgot test/example_fail_test.rb"
+    out = `#{cmd}`
+    expect_out = <<-OUT
+got:
+Hello
+I'm example
+want:
+bye
+I'm fail
+got:
+ok go
+want:
+ng back
+FAIL
+OUT
+    if out != expect_out
+      t.error("\n--- expect:\n#{expect_out}\n--- got:\n#{out}\n")
+    end
+  end
 end
