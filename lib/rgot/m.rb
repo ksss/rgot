@@ -1,3 +1,5 @@
+require 'stringio'
+
 module Rgot
   class M
     # Ruby-2.0.0 wants default value of keyword_argument
