@@ -74,10 +74,10 @@ module Rgot
         r = RipperExample.new(File.read(file))
         r.parse
         e = r.examples.find{|e| e.name == example.name}
-        if e && e.output.strip != out.string.strip
+        if e && e.output.strip != out.strip
           ok = false
           puts "got:"
-          puts out.string.strip
+          puts out.strip
           puts "want:"
           puts e.output.strip
         end
@@ -92,7 +92,7 @@ module Rgot
       out, err = StringIO.new, StringIO.new
       $stdout, $stderr = out, err
       yield
-      [out, err]
+      [out.string, err.string]
     ensure
       $stdout, $stderr = orig_out, orig_err
     end
