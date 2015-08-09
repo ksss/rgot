@@ -9,6 +9,7 @@ module ExamplePassTest
   end
 
   def example_multiline
+    # multiline example testing start
     puts "Hello"
     puts "I'm example"
     puts "Example is so cool"
