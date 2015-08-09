@@ -7,7 +7,7 @@ parser = OptionParser.new do |o|
   o.on '-v', '--verbose', "log all tests" do |arg|
     opts[:verbose] = arg
   end
-  o.on '-b', '--bench [regexp]', "benchmark" do |arg|
+  o.on '--bench [regexp]', "benchmark" do |arg|
     unless arg
       raise Rgot::OptionError, "missing argument for flag --bench"
     end
