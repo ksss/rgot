@@ -24,6 +24,9 @@ parser = OptionParser.new do |o|
   o.on '--require [path]', "load some code before running" do |arg|
     opts[:require_paths] << arg
   end
+  o.on '--load-path [path]', "Specify $LOAD_PATH directory" do |arg|
+    $LOAD_PATH.unshift(arg)
+  end
 end
 parser.parse!(ARGV)
 opts[:require_paths].each do |path|
