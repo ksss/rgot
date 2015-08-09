@@ -2,7 +2,9 @@
 require 'optparse'
 require 'rgot'
 
-opts = {}
+opts = {
+  require_paths: []
+}
 parser = OptionParser.new do |o|
   o.on '-v', '--verbose', "log all tests" do |arg|
     opts[:verbose] = arg
@@ -19,8 +21,14 @@ parser = OptionParser.new do |o|
   o.on '--timeout [sec]', "set timeout sec to testing" do |arg|
     opts[:timeout] = arg
   end
+  o.on '--require [path]', "load some code before running" do |arg|
+    opts[:require_paths] << arg
+  end
 end
 parser.parse!(ARGV)
+opts[:require_paths].each do |path|
+  require path
+end
 
 target = ARGV[0]
 
