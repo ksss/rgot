@@ -168,9 +168,11 @@ end
 $ rgot -h
 Usage: rgot [options]
     -v, --verbose                    log all tests
-    -b, --bench [regexp]             benchmark
+        --bench [regexp]             benchmark
         --benchtime [sec]            benchmark running time
         --timeout [sec]              set timeout sec to testing
+        --require [path]             load some code before running
+        --load-path [path]           Specify $LOAD_PATH directory
 ```
 
 ## Basic
@@ -208,7 +210,7 @@ Show all log and more detail infomation of testing.
 ## Benchmark
 
 ```
-$ rgot target_file_test.rb -b .
+$ rgot target_file_test.rb --bench .
 ```
 
 Run testing with benchmark.
