@@ -18,7 +18,7 @@ module PassTest
         t.error("expect Fixnum got #{sum.class}")
       end
       unless sum == ts.expect
-        t.error("expect 5 got #{sum}")
+        t.error("expect #{ts.expect} got #{sum}")
       end
     end
   end
