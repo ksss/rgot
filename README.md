@@ -1,4 +1,4 @@
-rgot
+Rgot
 ===
 
 [![Build Status](https://travis-ci.org/ksss/rgot.svg)](https://travis-ci.org/ksss/rgot)
@@ -7,7 +7,7 @@ Ruby + Golang Testing = Rgot
 
 Rgot is a testing package convert from golang testing.
 
-### usage
+### Usage
 
 test/sample.rb
 ```ruby
@@ -20,8 +20,6 @@ end
 
 test/pass_test.rb
 ```ruby
-require_relative './sample'
-
 module SampleTest
   class TypeSum < Struct.new(:left, :right, :expect)
   end
@@ -48,7 +46,7 @@ end
 ```
 
 ```
-$ rgot -v test/pass_test.rb
+$ rgot -v --require ./test/sample test/pass_test.rb
 === RUN test_pass
 --- PASS: test_pass (0.00003s)
 PASS
@@ -245,7 +243,7 @@ end
 
 Main method should be set 'test_main' only.
 
-variable `m` is a instance of `Rgot::M` class means Main.
+Variable `m` is a instance of `Rgot::M` class means Main.
 
 `Rgot::M#run` start all testing methods.
 
@@ -316,6 +314,22 @@ The `t` variable is instance of `Rgot::T` class means Testing.
 For Benchmark class.
 
 Can use log methods same as `Rgot::T` class
+
+## Rgot::B#n
+
+Automatic number calculated by running time.
+
+Recommend to this idiom.
+
+```ruby
+def benchmark_someone(b)
+  i = 0
+  while i < b.n
+    someone()
+    i += 1
+  end
+end
+```
 
 ## Rgot::B#reset_timer
 
