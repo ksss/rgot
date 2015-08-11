@@ -87,8 +87,6 @@ module Rgot
       ok
     end
 
-    private
-
     def capture
       orig_out, orig_err = $stdout, $stderr
       out, err = StringIO.new, StringIO.new
