@@ -106,4 +106,20 @@ OUT
       t.error("\n--- expect:\n#{expect_out}\n--- got:\n#{out}\n")
     end
   end
+
+  def test_single_dir(t)
+    cmd = "bin/rgot -v test/foo"
+    out = `#{cmd}`
+    if /test_foo is ok.*?PASS/m !~ out
+      t.error("want PASS got '#{out}'")
+    end
+  end
+
+  def test_multi_dir_and_module(t)
+    cmd = "bin/rgot -v test/bar test/bar/baz"
+    out = `#{cmd}`
+    if /test_bar is ok.*?PASS.*?test_baz is ng.*?FAIL/m !~ out
+      t.error("want PASS and FAIL massage got '#{out}'")
+    end
+  end
 end

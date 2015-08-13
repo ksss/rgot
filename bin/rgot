@@ -34,67 +34,78 @@ opts[:require_paths].each do |path|
 end
 
 target = ARGV[0]
-
-if target
-  if File.file?(target)
-    require File.expand_path(target)
-  elsif File.directory?(target)
-    Dir.glob("./#{target}/**/*_test.rb") do |i|
-      require i
+ARGV.each do |target|
+  if target
+    if File.file?(target)
+      require File.expand_path(target)
+    elsif File.directory?(target)
+      Dir.glob("./#{target}/*_test.rb") do |i|
+        require i
+      end
+    else
+      puts target
     end
   else
-    puts target
-  end
-else
-  Dir.glob("./**/*_test.rb") do |i|
-    require i
+    Dir.glob("./**/*_test.rb") do |i|
+      require i
+    end
   end
 end
 
 modules = Object.constants.select { |c|
   next if c == :FileTest
   /.*Test\z/ =~ c
+}.map{ |c|
+  Object.const_get(c)
 }
 
-if 1 != modules.length
-  puts "can not load module. found #{modules.join(', ')}"
-  exit 1
-end
+# if 1 != modules.length
+#   puts "can not load module. found #{modules.join(', ')}"
+#   exit 1
+# end
 
-tests = []
-benchmarks = []
-examples = []
-main = nil
-c = modules.first
+code = 0
+modules.each do |test_module|
+  pid = fork {
+    tests = []
+    benchmarks = []
+    examples = []
+    main = nil
+    methods = test_module.instance_methods.sort
+    methods.grep(/\Atest_/).each do |m|
+      if m == :test_main && main.nil?
+        main = Rgot::InternalTest.new(test_module, m)
+      else
+        tests << Rgot::InternalTest.new(test_module, m)
+      end
+    end
 
-test_module = Object.const_get(c)
-methods = test_module.instance_methods.sort
-methods.grep(/\Atest_/).each do |m|
-  if m == :test_main && main.nil?
-    main = Rgot::InternalTest.new(test_module, m)
-  else
-    tests << Rgot::InternalTest.new(test_module, m)
+    methods.grep(/\Abenchmark_/).each do |m|
+      benchmarks << Rgot::InternalBenchmark.new(test_module, m)
+    end
+
+    methods.grep(/\Aexample_?/).each do |m|
+      examples << Rgot::InternalExample.new(test_module, m)
+    end
+
+    m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
+    duration = Rgot.now
+    at_exit {
+      if !$!
+        puts sprintf("ok\t%.3fs", Rgot.now - duration)
+      end
+    }
+    if main
+      main.module.extend main.module
+      main.module.instance_method(main.name).bind(main.module).call(m)
+    else
+      exit m.run
+    end
+  }
+  _, status = Process.waitpid2(pid)
+  unless status.success?
+    code = 1
   end
 end
 
-methods.grep(/\Abenchmark_/).each do |m|
-  benchmarks << Rgot::InternalBenchmark.new(test_module, m)
-end
-
-methods.grep(/\Aexample_?/).each do |m|
-  examples << Rgot::InternalExample.new(test_module, m)
-end
-
-m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
-duration = Rgot.now
-at_exit {
-  if !$!
-    puts sprintf("ok\t%.3fs", Rgot.now - duration)
-  end
-}
-if main
-  main.module.extend main.module
-  main.module.instance_method(main.name).bind(main.module).call(m)
-else
-  exit m.run
-end
+exit code
