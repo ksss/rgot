@@ -88,7 +88,7 @@ module RgotTest
   def test_example_pass(t)
     cmd = "bin/rgot test/example_pass_test.rb"
     out = `#{cmd}`.chomp
-    if "PASS" != out
+    if /PASS/ !~ out
       t.error("want PASS got '#{out}'")
     end
   end

@@ -33,7 +33,6 @@ opts[:require_paths].each do |path|
   require path
 end
 
-target = ARGV[0]
 ARGV.each do |target|
   if target
     if File.file?(target)
@@ -65,6 +64,7 @@ modules = Object.constants.select { |c|
 # end
 
 code = 0
+duration = Rgot.now
 modules.each do |test_module|
   pid = fork {
     tests = []
@@ -89,12 +89,6 @@ modules.each do |test_module|
     end
 
     m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
-    duration = Rgot.now
-    at_exit {
-      if !$!
-        puts sprintf("ok\t%.3fs", Rgot.now - duration)
-      end
-    }
     if main
       main.module.extend main.module
       main.module.instance_method(main.name).bind(main.module).call(m)
@@ -108,4 +102,9 @@ modules.each do |test_module|
   end
 end
 
+at_exit {
+  if $!.success?
+    puts sprintf("ok\t%.3fs", Rgot.now - duration)
+  end
+}
 exit code
