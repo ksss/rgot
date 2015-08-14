@@ -11,20 +11,23 @@ module Rgot
     end
 
     def run
+      exit_code = 0
       test_ok = false
       example_ok = false
+
       Timeout.timeout(@opts[:timeout].to_f) {
         test_ok = run_tests
         example_ok = run_examples
       }
       if !test_ok || !example_ok
         puts "FAIL"
-        1
+        exit_code = 1
       else
         puts "PASS"
-        0
       end
       run_benchmarks
+
+      exit_code
     end
 
     private

@@ -70,6 +70,13 @@ module RgotTest
     end
   end
 
+  def test_main_method_return_code(t)
+    code = Rgot::M.new(tests: [], benchmarks: [], examples: [], opts: {}).run
+    unless Integer === code
+      t.error("Rgot::M#run return expect to exit code, got #{code}")
+    end
+  end
+
   def test_benchmark(t)
     cmd = "bin/rgot test/benchmark_test.rb --benchtime 0.4 --bench sum"
     out = `#{cmd}`
