@@ -90,7 +90,8 @@ modules.each do |test_module|
     duration = Rgot.now
     at_exit {
       template = "%s\t%s\t%.3fs"
-      if $!.success?
+
+      if $!.kind_of?(SystemExit) && $!.success?
         puts sprintf(template, "ok", test_module, Rgot.now - duration)
       else
         puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
