@@ -89,8 +89,11 @@ modules.each do |test_module|
 
     duration = Rgot.now
     at_exit {
+      template = "%s\t%s\t%.3fs"
       if $!.success?
-        puts sprintf("ok\t%.3fs", Rgot.now - duration)
+        puts sprintf(template, "ok", test_module, Rgot.now - duration)
+      else
+        puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
       end
     }
     m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)

@@ -88,7 +88,7 @@ module RgotTest
   def test_example_pass(t)
     cmd = "bin/rgot test/example_pass_test.rb"
     out = `#{cmd}`.chomp
-    if /PASS/ !~ out
+    if /ok\s+ExamplePassTest/ !~ out
       t.error("want PASS got '#{out}'")
     end
   end
@@ -96,7 +96,7 @@ module RgotTest
   def test_example_fail(t)
     cmd = "bin/rgot test/example_fail_test.rb"
     out = `#{cmd}`
-    expect_out = <<-OUT
+    expect_out = <<-OUT.chomp
 got:
 Hello
 I'm example
@@ -108,8 +108,9 @@ ok go
 want:
 ng back
 FAIL
+FAIL	ExamplePassTest
 OUT
-    if out != expect_out
+    if out.index(expect_out) != 0
       t.error("\n--- expect:\n#{expect_out}\n--- got:\n#{out}\n")
     end
   end
