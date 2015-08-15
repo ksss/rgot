@@ -22,7 +22,7 @@ module Rgot
         puts "FAIL"
         return 1
       end
-      puts "PASS"
+      puts "PASS" if @opts[:verbose]
       run_benchmarks
       0
     end

@@ -64,7 +64,6 @@ modules = Object.constants.select { |c|
 # end
 
 code = 0
-duration = Rgot.now
 modules.each do |test_module|
   pid = fork {
     tests = []
@@ -88,6 +87,12 @@ modules.each do |test_module|
       examples << Rgot::InternalExample.new(test_module, m)
     end
 
+    duration = Rgot.now
+    at_exit {
+      if $!.success?
+        puts sprintf("ok\t%.3fs", Rgot.now - duration)
+      end
+    }
     m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
     if main
       main.module.extend main.module
@@ -102,9 +107,4 @@ modules.each do |test_module|
   end
 end
 
-at_exit {
-  if $!.success?
-    puts sprintf("ok\t%.3fs", Rgot.now - duration)
-  end
-}
 exit code
