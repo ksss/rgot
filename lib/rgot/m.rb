@@ -11,7 +11,6 @@ module Rgot
     end
 
     def run
-      exit_code = 0
       test_ok = false
       example_ok = false
 
@@ -21,13 +20,11 @@ module Rgot
       }
       if !test_ok || !example_ok
         puts "FAIL"
-        exit_code = 1
-      else
-        puts "PASS"
+        return 1
       end
+      puts "PASS"
       run_benchmarks
-
-      exit_code
+      0
     end
 
     private
