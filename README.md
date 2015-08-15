@@ -83,6 +83,12 @@ module FooTest
 end
 ```
 
+```
+$ rgot foo_test.rb --bench .
+benchmark_something	14400000	81.392 ns/op
+ok	FooTest	2.782s
+```
+
 `b.n` is automatically adjusted.
 
 ## Example
@@ -141,14 +147,17 @@ But all file should be have one module (like golang package name).
 
 ```ruby
 module XxxTest
+  # ...
 end
 ```
 
 ## Method name
 
-Method name should be set 'test_*' for testing.
+Method name should be set `test_*` for testing.
 
-And benchmark method should be set 'benchmark_*'.
+And benchmark method should be set `benchmark_*`.
+
+And example method should be set `example_*`.
 
 ```ruby
 module XxxTest
@@ -156,6 +165,9 @@ module XxxTest
   end
 
   def benchmark_any_name(b)
+  end
+
+  def example_any_name
   end
 end
 ```
@@ -322,10 +334,10 @@ Automatic number calculated by running time.
 Recommend to this idiom.
 
 ```ruby
-def benchmark_someone(b)
+def benchmark_something(b)
   i = 0
   while i < b.n
-    someone()
+    something()
     i += 1
   end
 end
@@ -334,6 +346,18 @@ end
 ## Rgot::B#reset_timer
 
 Reset benchmark timer
+
+```ruby
+def benchmark_something(b)
+  obj = havy_prepare_method()
+  b.reset_timer # you can ignore time of havy_prepare_method()
+  i = 0
+  while i < b.n
+    obj.something()
+    i += 1
+  end
+end
+```
 
 ## Rgot::B#start_timer
 
