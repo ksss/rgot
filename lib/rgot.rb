@@ -4,6 +4,7 @@ module Rgot
   require 'rgot/m'
   require 'rgot/t'
   require 'rgot/b'
+  require 'rgot/benchmark_result'
   require 'rgot/example_parser'
 
   class OptionError < StandardError

@@ -51,10 +51,8 @@ module Rgot
         end
         run_n(n)
       end
-    end
 
-    def report
-      printf("%s\t%d\t%.3f ns/op\n", @name, @n, @duration / @n * 1_000_000_000)
+      BenchmarkResult.new(n: @n, t: @duration)
     end
 
     private

@@ -52,8 +52,9 @@ module Rgot
         next unless /#{@opts[:bench]}/ =~ bench.name
 
         b = B.new(bench.module, bench.name.to_sym, @opts)
-        b.run
-        b.report
+        printf "%s\t", bench.name
+        result = b.run
+        puts result
         if b.failed?
           ok = false
         end
