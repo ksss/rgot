@@ -130,4 +130,18 @@ OUT
       t.error("want PASS and FAIL massage got '#{out}'")
     end
   end
+
+  def test_rgot_benchmark(t)
+    result = Rgot.benchmark(benchtime: 0.1) { |b|
+      unless Rgot::B === b
+        t.error("expect instance of Rgot::B got #{b.class}")
+      end
+      unless 0 < b.n
+        t.error("aaa")
+      end
+    }
+    unless Rgot::BenchmarkResult === result
+      t.error("expect instance of Rgot::BenchmarkResult got #{result.class}")
+    end
+  end
 end

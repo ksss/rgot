@@ -32,5 +32,9 @@ module Rgot
         Time.now
       end
     end
+
+    def benchmark(opts={}, &block)
+      B.new(nil, nil, opts).run(&block)
+    end
   end
 end

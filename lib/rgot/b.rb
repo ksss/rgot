@@ -1,16 +1,15 @@
 module Rgot
   class B < Common
     attr_accessor :n
-    def initialize(benchmark_module, name, opts)
+    def initialize(benchmark_module, name, opts={})
       super()
       @n = 1
       @module = benchmark_module
       @name = name
       @opts = opts
-      @benchtime = @opts.fetch(:benchtime, 1).to_f
       @timer_on = false
       @duration = 0
-      @module.extend @module
+      @module.extend @module if @module
     end
 
     def start_timer
@@ -34,22 +33,23 @@ module Rgot
       @duration = 0
     end
 
-    def run
+    def run(&block)
       n = 1
-      run_n(n)
-      while !failed? && @duration < @benchtime && @n < 1e9
-        if @duration < (@benchtime / 100.0)
+      benchtime = @opts.fetch(:benchtime, 1).to_f
+      run_n(n, block)
+      while !failed? && @duration < benchtime && @n < 1e9
+        if @duration < (benchtime / 100.0)
           n *= 100
-        elsif @duration < (@benchtime / 10.0)
+        elsif @duration < (benchtime / 10.0)
           n *= 10
-        elsif @duration < (@benchtime / 5.0)
+        elsif @duration < (benchtime / 5.0)
           n *= 5
-        elsif @duration < (@benchtime / 2.0)
+        elsif @duration < (benchtime / 2.0)
           n *= 2
         else
           n *= 1.2
         end
-        run_n(n)
+        run_n(n, block)
       end
 
       BenchmarkResult.new(n: @n, t: @duration)
@@ -57,18 +57,18 @@ module Rgot
 
     private
 
-    def run_n(n)
+    def run_n(n, block=nil)
       GC.start
       i = 0
       @n = n
       reset_timer
       start_timer
-      call
+      if block
+        block.call(self)
+      else
+        @module.instance_method(@name).bind(@module).call(self)
+      end
       stop_timer
-    end
-
-    def call
-      @module.instance_method(@name).bind(@module).call(self)
     end
   end
 end
