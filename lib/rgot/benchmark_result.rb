@@ -1,6 +1,7 @@
 module Rgot
   class BenchmarkResult
-    def initialize(n:, t:)
+    # Ruby-2.0.0 wants default value of keyword_argument
+    def initialize(n: nil, t: nil)
       @n = n
       @t = t
     end
