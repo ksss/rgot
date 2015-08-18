@@ -8,6 +8,13 @@ module Rgot
       @benchmarks = benchmarks
       @examples = examples
       @opts = opts
+      @cpu_list = @opts.fetch(:cpu, "1").split(',').map { |i|
+        j = i.to_i
+        if j == 0
+          raise OptionError, "expect integer string, got #{i.inspect}"
+        end
+        j
+      }
     end
 
     def run
@@ -51,12 +58,21 @@ module Rgot
       @benchmarks.each do |bench|
         next unless /#{@opts[:bench]}/ =~ bench.name
 
-        b = B.new(bench.module, bench.name.to_sym, @opts)
-        printf "%s\t", bench.name
-        result = b.run
-        puts result
-        if b.failed?
-          ok = false
+        @cpu_list.each do |procs|
+          opts = @opts.dup
+          opts[:procs] = procs
+          b = B.new(bench.module, bench.name.to_sym, opts)
+
+          if 1 < procs
+            printf "%s-%d\t", bench.name, procs
+          else
+            printf "%s\t", bench.name
+          end
+          result = b.run
+          puts result
+          if b.failed?
+            ok = false
+          end
         end
       end
       ok
