@@ -3,7 +3,11 @@ require 'stringio'
 module Rgot
   class M
     # Ruby-2.0.0 wants default value of keyword_argument
-    def initialize(tests: [], benchmarks: [], examples: [], opts: {})
+    def initialize(tests: nil, benchmarks: nil, examples: nil, opts: {})
+      raise ArgumentError, "missing keyword: tests" unless tests
+      raise ArgumentError, "missing keyword: benchmarks" unless benchmarks
+      raise ArgumentError, "missing keyword: examples" unless examples
+
       @tests = tests
       @benchmarks = benchmarks
       @examples = examples

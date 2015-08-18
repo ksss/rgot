@@ -2,6 +2,8 @@ module Rgot
   class BenchmarkResult
     # Ruby-2.0.0 wants default value of keyword_argument
     def initialize(n: nil, t: nil)
+      raise ArgumentError, "missing keyword: n" unless n
+      raise ArgumentError, "missing keyword: t" unless t
       @n = n
       @t = t
     end
