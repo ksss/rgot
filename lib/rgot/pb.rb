@@ -9,8 +9,7 @@ module Rgot
     end
 
     def next
-      @bn -= 1
-      0 < @bn
+      (0 < @bn).tap { @bn -= 1 }
     end
   end
 end
