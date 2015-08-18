@@ -94,9 +94,19 @@ modules.each do |test_module|
     at_exit {
       template = "%s\t%s\t%.3fs"
 
-      if $!.kind_of?(SystemExit) && $!.success?
-        puts sprintf(template, "ok", test_module, Rgot.now - duration)
+      case $!
+      when SystemExit
+        if $!.success?
+          # exit 0
+          puts sprintf(template, "ok", test_module, Rgot.now - duration)
+        else
+          # exit 1
+          puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
+        end
+      when NilClass
+        # not raise, not exit
       else
+        # any exception
         puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
       end
     }
