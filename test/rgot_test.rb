@@ -172,4 +172,22 @@ OUT
       t.error("expect instance of Rgot::BenchmarkResult got #{result.class}")
     end
   end
+
+  def test_rgot_help(t)
+    out = `rgot -h`
+    expect_out = <<-HELP
+Usage: rgot [options]
+    -v, --verbose                    log all tests
+        --bench [regexp]             benchmark
+        --benchtime [sec]            benchmark running time
+        --timeout [sec]              set timeout sec to testing
+        --cpu [count,...]            set cpu counts of comma splited
+        --thread [count,...]         set thread counts of comma splited
+        --require [path]             load some code before running
+        --load-path [path]           Specify $LOAD_PATH directory
+HELP
+    if out != expect_out
+      t.error("rgot -h README.md and test should be update")
+    end
+  end
 end

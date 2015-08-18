@@ -182,6 +182,7 @@ Usage: rgot [options]
         --benchtime [sec]            benchmark running time
         --timeout [sec]              set timeout sec to testing
         --cpu [count,...]            set cpu counts of comma splited
+        --thread [count,...]         set thread counts of comma splited
         --require [path]             load some code before running
         --load-path [path]           Specify $LOAD_PATH directory
 ```
