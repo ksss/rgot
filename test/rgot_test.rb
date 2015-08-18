@@ -7,7 +7,7 @@ module RgotTest
   end
 
   def test_pass(t)
-    cmd = "bin/rgot test/pass_test.rb -v"
+    cmd = "rgot test/pass_test.rb -v"
     out = `#{cmd}`
     if /---\sPASS:\s.*/ !~ out
       t.error("expect PASS `#{cmd}` got #{out}")
@@ -15,7 +15,7 @@ module RgotTest
   end
 
   def test_fail(t)
-    cmd = "bin/rgot test/fail_test.rb -v"
+    cmd = "rgot test/fail_test.rb -v"
     out = `#{cmd}`
     if /---\sFAIL:\s.*/ !~ out
       t.error("expect FAIL `#{cmd}` got #{out}")
@@ -23,7 +23,7 @@ module RgotTest
   end
 
   def test_fatal(t)
-    cmd = "bin/rgot test/fatal_test.rb -v"
+    cmd = "rgot test/fatal_test.rb -v"
     out, err, status = Open3.capture3(cmd)
     if status.success?
       t.error("expect process not success `#{cmd}` got #{status}")
@@ -39,7 +39,7 @@ module RgotTest
   end
 
   def test_skip(t)
-    cmd = "bin/rgot test/skip_test.rb -v"
+    cmd = "rgot test/skip_test.rb -v"
     out = `#{cmd}`
     if /skip testing/ !~ out
       t.error("expect skip `#{cmd}` got #{out}")
@@ -47,7 +47,7 @@ module RgotTest
   end
 
   def test_timeout(t)
-    cmd = "bin/rgot test/timeout_test.rb -v --timeout 0.1"
+    cmd = "rgot test/timeout_test.rb -v --timeout 0.1"
     out, err, status = Open3.capture3(cmd)
     if status.success?
       t.error("expect process not success `#{cmd}` got #{status}")
@@ -63,7 +63,7 @@ module RgotTest
   end
 
   def test_main_method(t)
-    cmd = "bin/rgot test/main_test.rb -v"
+    cmd = "rgot test/main_test.rb -v"
     out = `#{cmd}`
     if /start in main.*?run testing.*?end in main/m !~ out
       t.error("expect output start -> run -> end got '#{out}'")
@@ -78,7 +78,7 @@ module RgotTest
   end
 
   def test_benchmark(t)
-    cmd = "bin/rgot test/benchmark_test.rb --benchtime 0.4 --bench sum"
+    cmd = "rgot test/benchmark_test.rb --benchtime 0.4 --bench sum"
     out = `#{cmd}`
     if /benchmark_sum\s+\d+\s+\d+\.\d+\s+ns\/op/ !~ out
       t.error("expect output benchmark report. got #{out}")
@@ -86,7 +86,7 @@ module RgotTest
   end
 
   def test_benchmark_parallel_procs(t)
-    cmd = "bin/rgot test/benchmark_test.rb --benchtime 0.1 --bench parallel --cpu=2,4"
+    cmd = "rgot test/benchmark_test.rb --benchtime 0.1 --bench parallel --cpu=2,4"
     out = `#{cmd}`
     expect_out = <<-OUT.chomp
 benchmark_parallel-2\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
@@ -99,7 +99,7 @@ OUT
   end
 
   def test_benchmark_concurrent_threads(t)
-    cmd = "bin/rgot test/benchmark_test.rb --benchtime 0.01 --bench parallel --cpu=2,4 --thread=2,4"
+    cmd = "rgot test/benchmark_test.rb --benchtime 0.01 --bench parallel --cpu=2,4 --thread=2,4"
     out = `#{cmd}`
     expect_out = <<-OUT.chomp
 benchmark_parallel-2\\(2\\)\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
@@ -114,7 +114,7 @@ OUT
   end
 
   def test_example_pass(t)
-    cmd = "bin/rgot test/example_pass_test.rb"
+    cmd = "rgot test/example_pass_test.rb"
     out = `#{cmd}`.chomp
     if /ok\s+ExamplePassTest/ !~ out
       t.error("want PASS got '#{out}'")
@@ -122,7 +122,7 @@ OUT
   end
 
   def test_example_fail(t)
-    cmd = "bin/rgot test/example_fail_test.rb"
+    cmd = "rgot test/example_fail_test.rb"
     out = `#{cmd}`
     expect_out = <<-OUT.chomp
 got:
@@ -144,7 +144,7 @@ OUT
   end
 
   def test_single_dir(t)
-    cmd = "bin/rgot -v test/foo"
+    cmd = "rgot -v test/foo"
     out = `#{cmd}`
     if /test_foo is ok.*?PASS/m !~ out
       t.error("want PASS got '#{out}'")
@@ -152,7 +152,7 @@ OUT
   end
 
   def test_multi_dir_and_module(t)
-    cmd = "bin/rgot -v test/bar test/bar/baz"
+    cmd = "rgot -v test/bar test/bar/baz"
     out = `#{cmd}`
     if /test_bar is ok.*?PASS.*?test_baz is ng.*?FAIL/m !~ out
       t.error("want PASS and FAIL massage got '#{out}'")
