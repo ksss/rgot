@@ -172,7 +172,7 @@ module XxxTest
 end
 ```
 
-# Command
+# Command line interface
 
 ```
 $ rgot -h
@@ -181,6 +181,7 @@ Usage: rgot [options]
         --bench [regexp]             benchmark
         --benchtime [sec]            benchmark running time
         --timeout [sec]              set timeout sec to testing
+        --cpu [count,...]            set cpu counts of comma splited
         --require [path]             load some code before running
         --load-path [path]           Specify $LOAD_PATH directory
 ```
@@ -228,6 +229,37 @@ Run testing with benchmark.
 `.` means match all string for regexp.
 
 Set `someone` if you only run benchmark to match `someone` method.(e.g. benchmark_someone_1)
+
+### Parallel benchmark
+
+Benchmark for parallel performance.
+
+`--cpu` option set process counts.
+
+Benchmark fork, run and report each by process counts.
+
+(**process** means ruby/linux process)
+
+```ruby
+module FooTest
+  def benchmark_any_func(b)
+    b.run_parallel do |pb|
+      # pb is instance of Rgot::PB
+      # call some time by b.n
+      while pb.next
+        some_func()
+      end
+    end
+  end
+end
+```
+
+```
+$ rgot foo_test.rb --bench . --cpu=2,4
+benchmark_any_func-2	40	13363604.899 ns/op
+benchmark_any_func-4	160	7125845.113 ns/op
+ok	FooTest	1.761s
+```
 
 ## Timeout
 
@@ -349,7 +381,7 @@ Reset benchmark timer
 
 ```ruby
 def benchmark_something(b)
-  obj = havy_prepare_method()
+  obj = heavy_prepare_method()
   b.reset_timer # you can ignore time of havy_prepare_method()
   i = 0
   while i < b.n
