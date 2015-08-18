@@ -94,7 +94,6 @@ benchmark_parallel-4\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
 ok\\s+BenchmarkTest\\s+\\d+.\\d+s
 OUT
     if /#{expect_out}/m !~ out
-      p /#{expect_out}/m
       t.error("expect match out. got #{out}")
     end
   end
