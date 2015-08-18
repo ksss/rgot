@@ -61,10 +61,14 @@ module Rgot
     def run_parallel
       @opts[:procs].times do
         fork {
-          yield PB.new(bn: @n)
+          Array.new(@opts[:threads]) {
+            Thread.new {
+              yield PB.new(bn: @n)
+            }.tap { |t| t.abort_on_exception = true }
+          }.each(&:join)
         }
       end
-      @n *= @opts[:procs]
+      @n *= @opts[:procs] * @opts[:threads]
       Process.waitall
     end
 

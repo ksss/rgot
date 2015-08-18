@@ -24,6 +24,9 @@ parser = OptionParser.new do |o|
   o.on '--cpu [count,...]', "set cpu counts of comma splited" do |arg|
     opts[:cpu] = arg
   end
+  o.on '--thread [count,...]', "set thread counts of comma splited" do |arg|
+    opts[:thread] = arg
+  end
   o.on '--require [path]', "load some code before running" do |arg|
     opts[:require_paths] << arg
   end

@@ -85,12 +85,27 @@ module RgotTest
     end
   end
 
-  def test_benchmark_parallel(t)
+  def test_benchmark_parallel_procs(t)
     cmd = "bin/rgot test/benchmark_test.rb --benchtime 0.1 --bench parallel --cpu=2,4"
     out = `#{cmd}`
     expect_out = <<-OUT.chomp
 benchmark_parallel-2\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
 benchmark_parallel-4\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
+ok\\s+BenchmarkTest\\s+\\d+.\\d+s
+OUT
+    if /#{expect_out}/m !~ out
+      t.error("expect match out. got #{out}")
+    end
+  end
+
+  def test_benchmark_concurrent_threads(t)
+    cmd = "bin/rgot test/benchmark_test.rb --benchtime 0.01 --bench parallel --cpu=2,4 --thread=2,4"
+    out = `#{cmd}`
+    expect_out = <<-OUT.chomp
+benchmark_parallel-2\\(2\\)\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
+benchmark_parallel-2\\(4\\)\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
+benchmark_parallel-4\\(2\\)\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
+benchmark_parallel-4\\(4\\)\\s+\\d+\\s+\\d+\\.\\d+\\s+ns/op
 ok\\s+BenchmarkTest\\s+\\d+.\\d+s
 OUT
     if /#{expect_out}/m !~ out

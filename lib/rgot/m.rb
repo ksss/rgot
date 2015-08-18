@@ -19,6 +19,13 @@ module Rgot
         end
         j
       }
+      @thread_list = @opts.fetch(:thread, "1").split(',').map { |i|
+        j = i.to_i
+        if j == 0
+          raise OptionError, "expect integer string, got #{i.inspect}"
+        end
+        j
+      }
     end
 
     def run
@@ -63,19 +70,21 @@ module Rgot
         next unless /#{@opts[:bench]}/ =~ bench.name
 
         @cpu_list.each do |procs|
-          opts = @opts.dup
-          opts[:procs] = procs
-          b = B.new(bench.module, bench.name.to_sym, opts)
+          @thread_list.each do |threads|
+            opts = @opts.dup
+            opts[:procs] = procs
+            opts[:threads] = threads
+            b = B.new(bench.module, bench.name.to_sym, opts)
 
-          if 1 < procs
-            printf "%s-%d\t", bench.name, procs
-          else
-            printf "%s\t", bench.name
-          end
-          result = b.run
-          puts result
-          if b.failed?
-            ok = false
+            benchname = bench.name.to_s
+            benchname << "-#{procs}" if 1 < procs
+            benchname << "(#{threads})" if 1 < threads
+            print "#{benchname}\t"
+            result = b.run
+            puts result
+            if b.failed?
+              ok = false
+            end
           end
         end
       end
