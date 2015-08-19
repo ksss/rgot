@@ -235,11 +235,13 @@ Set `someone` if you only run benchmark to match `someone` method.(e.g. benchmar
 
 Benchmark for parallel performance.
 
-`--cpu` option set process counts.
+`--cpu` option set process counts (default 1).
+
+And `--thread` option set thread counts (default 1).
 
 Benchmark fork, run and report each by process counts.
 
-(**process** means ruby/linux process)
+(**process** and **thread** means ruby/linux process)
 
 ```ruby
 module FooTest
@@ -256,10 +258,12 @@ end
 ```
 
 ```
-$ rgot foo_test.rb --bench . --cpu=2,4
-benchmark_any_func-2	40	13363604.899 ns/op
-benchmark_any_func-4	160	7125845.113 ns/op
-ok	FooTest	1.761s
+$ rgot foo_test.rb --bench . --cpu=2,4 --thread=2,4
+benchmark_any_func-2(2)	40	13363604.899 ns/op
+benchmark_any_func-2(4)	160	7125845.113 ns/op
+benchmark_any_func-4(2)	160	7224815.534 ns/op
+benchmark_any_func-4(4)	320	3652431.962 ns/op
+ok	FooTest	3.061s
 ```
 
 ## Timeout
