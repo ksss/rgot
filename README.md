@@ -403,3 +403,31 @@ Start benchmark timer
 ## Rgot::B#stop_timer
 
 Stop benchmark timer
+
+## Rgot::B#run_parallel
+
+Start parallel benchmark using `fork` and `Thread.new`.
+
+This method should be call with block.
+
+The block argument is instance of Rgot::PB.
+
+# Rgot::PB (Parallel Benchmark)
+
+## Rgot::PB#next
+
+Should be call this when parallel benchmark.
+
+Repeat while return false.
+
+Recommend this idiom.
+
+```ruby
+def benchmark_foo(b)
+  b.run_parallel do |pb|
+    while pb.next
+      some_func()
+    end
+  end
+end
+```
