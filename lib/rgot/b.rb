@@ -59,6 +59,8 @@ module Rgot
     end
 
     def run_parallel
+      raise LocalJumpError, "no block given" unless block_given?
+
       @opts[:procs].times do
         fork {
           Array.new(@opts[:threads]) {

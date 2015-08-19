@@ -118,6 +118,8 @@ module Rgot
     end
 
     def capture
+      raise LocalJumpError, "no block given" unless block_given?
+
       orig_out, orig_err = $stdout, $stderr
       out, err = StringIO.new, StringIO.new
       $stdout, $stderr = out, err
