@@ -9,6 +9,10 @@ parser = OptionParser.new do |o|
   o.on '-v', '--verbose', "log all tests" do |arg|
     opts[:verbose] = arg
   end
+  o.on '--version', "show Rgot version" do |arg|
+    puts "Rgot v#{Rgot::VERSION}"
+    exit 0
+  end
   o.on '--bench [regexp]', "benchmark" do |arg|
     unless arg
       raise Rgot::OptionError, "missing argument for flag --bench"

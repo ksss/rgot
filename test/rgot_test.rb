@@ -178,6 +178,7 @@ OUT
     expect_out = <<-HELP
 Usage: rgot [options]
     -v, --verbose                    log all tests
+        --version                    show Rgot version
         --bench [regexp]             benchmark
         --benchtime [sec]            benchmark running time
         --timeout [sec]              set timeout sec to testing
