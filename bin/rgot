@@ -25,10 +25,10 @@ parser = OptionParser.new do |o|
   o.on '--timeout [sec]', "set timeout sec to testing" do |arg|
     opts[:timeout] = arg
   end
-  o.on '--cpu [count,...]', "set cpu counts of comma splited" do |arg|
+  o.on '--cpu [count,...]', "set cpu counts of comma split" do |arg|
     opts[:cpu] = arg
   end
-  o.on '--thread [count,...]', "set thread counts of comma splited" do |arg|
+  o.on '--thread [count,...]', "set thread counts of comma split" do |arg|
     opts[:thread] = arg
   end
   o.on '--require [path]', "load some code before running" do |arg|
