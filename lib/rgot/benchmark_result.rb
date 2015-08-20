@@ -9,7 +9,7 @@ module Rgot
     end
 
     def to_s
-      sprintf("%d\t%.3f ns/op", @n, @t / @n * 1_000_000_000)
+      sprintf("%d\t%d ns/op", @n, @t / @n * 1_000_000_000)
     end
   end
 end
