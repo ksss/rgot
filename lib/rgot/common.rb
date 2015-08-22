@@ -1,3 +1,5 @@
+require 'thread'
+
 module Rgot
   class Common
     attr_accessor :output
@@ -8,6 +10,7 @@ module Rgot
       @skipped = false
       @finished = false
       @start = Rgot.now
+      @mutex = Mutex.new
     end
 
     def failed?
@@ -23,15 +26,15 @@ module Rgot
     end
 
     def fail!
-      @failed = true
+      @mutex.synchronize { @failed = true }
     end
 
     def skip!
-      @skipped = true
+      @mutex.synchronize { @skipped = true }
     end
 
     def finish!
-      @finished = true
+      @mutex.synchronize { @finished = true }
     end
 
     def log(*args)
@@ -76,7 +79,7 @@ module Rgot
     end
 
     def internal_log(msg)
-      @output << decorate(msg)
+      @mutex.synchronize { @output << decorate(msg) }
     end
   end
 end
