@@ -36,24 +36,26 @@ module Rgot
     def run(&block)
       n = 1
       benchtime = @opts.fetch(:benchtime, 1).to_f
-      run_n(n.to_i, block)
-      while !failed? && @duration < benchtime && @n < 1e9
-        if @duration < (benchtime / 100.0)
-          @n *= 100
-        elsif @duration < (benchtime / 10.0)
-          @n *= 10
-        elsif @duration < (benchtime / 5.0)
-          @n *= 5
-        elsif @duration < (benchtime / 2.0)
-          @n *= 2
-        else
-          if @n.to_i == 1
-            break
+      catch(:skip) {
+        run_n(n.to_i, block)
+        while !failed? && @duration < benchtime && @n < 1e9
+          if @duration < (benchtime / 100.0)
+            @n *= 100
+          elsif @duration < (benchtime / 10.0)
+            @n *= 10
+          elsif @duration < (benchtime / 5.0)
+            @n *= 5
+          elsif @duration < (benchtime / 2.0)
+            @n *= 2
+          else
+            if @n.to_i == 1
+              break
+            end
+            @n *= 1.2
           end
-          @n *= 1.2
+          run_n(@n.to_i, block)
         end
-        run_n(@n.to_i, block)
-      end
+      }
 
       BenchmarkResult.new(n: @n, t: @duration)
     end

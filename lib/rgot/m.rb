@@ -81,9 +81,13 @@ module Rgot
             benchname << "(#{threads})" if 1 < threads
             print "#{benchname}\t"
             result = b.run
-            puts result
             if b.failed?
               ok = false
+              next
+            end
+            puts result
+            if 0 < b.output.length
+              printf("--- BENCH: %s\n%s", benchname, b.output)
             end
           end
         end

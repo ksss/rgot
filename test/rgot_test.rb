@@ -98,6 +98,20 @@ OUT
     end
   end
 
+  def test_benchmark_skip(t)
+    cmd = "rgot test/benchmark_test.rb --bench skip"
+    out = `#{cmd}`
+    expect_out = <<-'OUT'
+benchmark_skip\t\d\t\d\s+ns/op
+---\s+BENCH:\s+benchmark_skip
+\t.*?:\s+skip!
+ok\tBenchmarkTest\t\d.\d+s
+OUT
+    if /#{expect_out}/ !~ out
+      t.error("expect output not match")
+    end
+  end
+
   def test_benchmark_concurrent_threads(t)
     cmd = "rgot test/benchmark_test.rb --benchtime 0.01 --bench parallel --cpu=2,4 --thread=2,4"
     out = `#{cmd}`

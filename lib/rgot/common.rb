@@ -1,5 +1,7 @@
 module Rgot
   class Common
+    attr_accessor :output
+
     def initialize
       @output = ""
       @failed = false

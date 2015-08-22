@@ -25,4 +25,9 @@ module BenchmarkTest
       end
     end
   end
+
+  def benchmark_skip(b)
+    b.skip "skip!"
+    raise "never reach!"
+  end
 end
