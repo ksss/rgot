@@ -202,7 +202,8 @@ OUT
       end
     end
     w.close
-    if r.read_nonblock(1, exception: false) == :wait_readable
+    ret, err = go { r.read_nonblock(1) }
+    if ret != "t" || err
       t.error("expect call block in run_parallel")
     end
   end
@@ -224,5 +225,18 @@ HELP
     if out != expect_out
       t.error("rgot -h README.md and test should be update")
     end
+  end
+
+  private
+
+  def go
+    ret = nil
+    err = nil
+    begin
+      ret = yield
+    rescue => e
+      err = e
+    end
+    [ret, err]
   end
 end
