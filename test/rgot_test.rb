@@ -187,6 +187,26 @@ OUT
     end
   end
 
+  def test_rgot_parallel_benchmark(t)
+    r, w = IO.pipe
+    Rgot.benchmark do |b|
+      b.run_parallel do |pb|
+        r.close
+        w.write("t")
+        unless pb.kind_of?(Rgot::PB)
+          t.error("run_parallel block argument expect instance of Rgot::PB, got #{pb}")
+        end
+        unless ok = pb.next
+          t.error("first Rgot::PB#next expect `true' got #{ok}")
+        end
+      end
+    end
+    w.close
+    if r.read_nonblock(1, exception: false) == :wait_readable
+      t.error("expect call block in run_parallel")
+    end
+  end
+
   def test_rgot_help(t)
     out = `rgot -h`
     expect_out = <<-HELP

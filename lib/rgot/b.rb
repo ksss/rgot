@@ -63,16 +63,19 @@ module Rgot
     def run_parallel
       raise LocalJumpError, "no block given" unless block_given?
 
-      @opts[:procs].times do
+      procs = (@opts[:procs] || 1)
+      threads = (@opts[:threads] || 1)
+
+      procs.times do
         fork {
-          Array.new(@opts[:threads]) {
+          Array.new(threads) {
             Thread.new {
               yield PB.new(bn: @n)
             }.tap { |t| t.abort_on_exception = true }
           }.each(&:join)
         }
       end
-      @n *= @opts[:procs] * @opts[:threads]
+      @n *= procs * threads
       Process.waitall
     end
 
