@@ -179,7 +179,7 @@ OUT
         t.error("expect instance of Rgot::B got #{b.class}")
       end
       unless 0 < b.n
-        t.error("aaa")
+        t.error("b.n expect over 0 since loop times")
       end
     }
     unless Rgot::BenchmarkResult === result
