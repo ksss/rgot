@@ -34,7 +34,11 @@ module Rgot
       end
     end
 
-    def benchmark(opts={}, &block)
+    def benchmark(opts_hash={}, &block)
+      opts = B::Options.new
+      opts_hash.each do |k, v|
+        opts[k] = v
+      end
       B.new(nil, nil, opts).run(&block)
     end
   end

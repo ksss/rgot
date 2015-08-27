@@ -1,7 +1,13 @@
 module Rgot
   class B < Common
+    class Options < Struct.new(
+      :procs,
+      :threads,
+      :benchtime
+    ); end
+
     attr_accessor :n
-    def initialize(benchmark_module, name, opts={})
+    def initialize(benchmark_module, name, opts=Options.new)
       super()
       @n = 1
       @module = benchmark_module
@@ -35,7 +41,7 @@ module Rgot
 
     def run(&block)
       n = 1
-      benchtime = @opts.fetch(:benchtime, 1).to_f
+      benchtime = (@opts.benchtime || 1).to_f
       catch(:skip) {
         run_n(n.to_i, block)
         while !failed? && @duration < benchtime && @n < 1e9
@@ -63,8 +69,8 @@ module Rgot
     def run_parallel
       raise LocalJumpError, "no block given" unless block_given?
 
-      procs = (@opts[:procs] || 1)
-      threads = (@opts[:threads] || 1)
+      procs = (@opts.procs || 1)
+      threads = (@opts.threads || 1)
 
       procs.times do
         fork {

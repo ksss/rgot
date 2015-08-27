@@ -2,12 +2,11 @@
 require 'optparse'
 require 'rgot'
 
-opts = {
-  require_paths: []
-}
+opts = Rgot::M::Options.new
+opts.require_paths = []
 parser = OptionParser.new do |o|
   o.on '-v', '--verbose', "log all tests" do |arg|
-    opts[:verbose] = arg
+    opts.verbose = arg
   end
   o.on '--version', "show Rgot version" do |arg|
     puts "Rgot v#{Rgot::VERSION}"
@@ -17,29 +16,29 @@ parser = OptionParser.new do |o|
     unless arg
       raise Rgot::OptionError, "missing argument for flag --bench"
     end
-    opts[:bench] = arg
+    opts.bench = arg
   end
   o.on '--benchtime [sec]', "benchmark running time" do |arg|
-    opts[:benchtime] = arg
+    opts.benchtime = arg
   end
   o.on '--timeout [sec]', "set timeout sec to testing" do |arg|
-    opts[:timeout] = arg
+    opts.timeout = arg
   end
   o.on '--cpu [count,...]', "set cpu counts of comma split" do |arg|
-    opts[:cpu] = arg
+    opts.cpu = arg
   end
   o.on '--thread [count,...]', "set thread counts of comma split" do |arg|
-    opts[:thread] = arg
+    opts.thread = arg
   end
   o.on '--require [path]', "load some code before running" do |arg|
-    opts[:require_paths] << arg
+    opts.require_paths << arg
   end
   o.on '--load-path [path]', "Specify $LOAD_PATH directory" do |arg|
     $LOAD_PATH.unshift(arg)
   end
 end
 parser.parse!(ARGV)
-opts[:require_paths].each do |path|
+opts.require_paths.each do |path|
   require path
 end
 

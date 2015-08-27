@@ -71,7 +71,7 @@ module RgotTest
   end
 
   def test_main_method_return_code(t)
-    code = Rgot::M.new(tests: [], benchmarks: [], examples: [], opts: {}).run
+    code = Rgot::M.new(tests: [], benchmarks: [], examples: []).run
     unless Integer === code
       t.error("Rgot::M#run return expect to exit code, got #{code}")
     end
@@ -124,6 +124,22 @@ ok\\s+BenchmarkTest\\s+\\d+.\\d+s
 OUT
     if /#{expect_out}/m !~ out
       t.error("expect match out. got #{out}")
+    end
+  end
+
+  def test_benchmark_invalid_option(t)
+    cmd = "rgot test/benchmark_test.rb --cpu=2,-1"
+    out, err, status = Open3.capture3(cmd)
+    if status.success?
+      t.error("expect process not success `#{cmd}` got #{status}")
+    end
+    if /invalid value "-1" for --cpu \(Rgot::OptionError\)/ !~ err
+      error_class = err.match(/\((.*?)\)/)[1]
+      t.log(err)
+      t.error("expect Rgot::OptionError got #{error_class}")
+    end
+    if /FAIL\s.*/ !~ out
+      t.error("expect FAIL `#{cmd}` got #{out}")
     end
   end
 

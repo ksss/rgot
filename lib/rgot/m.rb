@@ -2,37 +2,42 @@ require 'stringio'
 
 module Rgot
   class M
+    class Options < Struct.new(
+      :require_paths,
+      :verbose,
+      :bench,
+      :benchtime,
+      :timeout,
+      :cpu,
+      :thread,
+    ); end
+
     # Ruby-2.0.0 wants default value of keyword_argument
-    def initialize(tests: nil, benchmarks: nil, examples: nil, opts: {})
+    def initialize(tests: nil, benchmarks: nil, examples: nil, opts: Options.new)
       raise ArgumentError, "missing keyword: tests" unless tests
       raise ArgumentError, "missing keyword: benchmarks" unless benchmarks
       raise ArgumentError, "missing keyword: examples" unless examples
-
+      @cpu_list = (opts.cpu || "1").split(',').map { |i|
+        j = i.to_i
+        raise Rgot::OptionError, "invalid value #{i.inspect} for --cpu" unless 0 < j
+        j
+      }
+      @thread_list = (opts.thread || "1").split(',').map { |i|
+        j = i.to_i
+        raise Rgot::OptionError, "invalid value #{i.inspect} for --thread" unless 0 < j
+        j
+      }
       @tests = tests
       @benchmarks = benchmarks
       @examples = examples
       @opts = opts
-      @cpu_list = @opts.fetch(:cpu, "1").split(',').map { |i|
-        j = i.to_i
-        if j == 0
-          raise OptionError, "expect integer string, got #{i.inspect}"
-        end
-        j
-      }
-      @thread_list = @opts.fetch(:thread, "1").split(',').map { |i|
-        j = i.to_i
-        if j == 0
-          raise OptionError, "expect integer string, got #{i.inspect}"
-        end
-        j
-      }
     end
 
     def run
       test_ok = false
       example_ok = false
 
-      Timeout.timeout(@opts[:timeout].to_f) {
+      Timeout.timeout(@opts.timeout.to_f) {
         test_ok = run_tests
         example_ok = run_examples
       }
@@ -40,7 +45,7 @@ module Rgot
         puts "FAIL"
         return 1
       end
-      puts "PASS" if @opts[:verbose]
+      puts "PASS" if @opts.verbose
       run_benchmarks
       0
     end
@@ -50,8 +55,10 @@ module Rgot
     def run_tests
       ok = true
       @tests.each do |test|
-        t = T.new(test.module, test.name.to_sym, @opts)
-        if @opts[:verbose]
+        opts = T::Options.new
+        opts.verbose = @opts.verbose
+        t = T.new(test.module, test.name.to_sym, opts)
+        if @opts.verbose
           puts "=== RUN #{test.name}"
         end
         t.run
@@ -65,15 +72,16 @@ module Rgot
 
     def run_benchmarks
       ok = true
-      return ok unless @opts[:bench]
+      return ok unless @opts.bench
       @benchmarks.each do |bench|
-        next unless /#{@opts[:bench]}/ =~ bench.name
+        next unless /#{@opts.bench}/ =~ bench.name
 
         @cpu_list.each do |procs|
           @thread_list.each do |threads|
-            opts = @opts.dup
-            opts[:procs] = procs
-            opts[:threads] = threads
+            opts = B::Options.new
+            opts.benchtime = @opts.benchtime
+            opts.procs = procs
+            opts.threads = threads
             b = B.new(bench.module, bench.name.to_sym, opts)
 
             benchname = bench.name.to_s
@@ -98,7 +106,7 @@ module Rgot
     def run_examples
       ok = true
       @examples.each do |example|
-        if @opts[:verbose]
+        if @opts.verbose
           puts "=== RUN #{example.name}"
         end
         example.module.extend(example.module)

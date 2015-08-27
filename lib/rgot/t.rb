@@ -1,6 +1,10 @@
 module Rgot
   class T < Common
-    def initialize(test_module, name, opts={})
+    class Options < Struct.new(
+      :verbose
+    ); end
+
+    def initialize(test_module, name, opts=Options.new)
       super()
       @module = test_module
       @name = name
@@ -24,7 +28,7 @@ module Rgot
       template = "--- %s: %s (%.5fs)\n%s"
       if failed?
         printf template, "FAIL", @name, duration, @output
-      elsif @opts[:verbose]
+      elsif @opts.verbose
         if skipped?
           printf template, "SKIP", @name, duration, @output
         else
