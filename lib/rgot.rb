@@ -41,5 +41,9 @@ module Rgot
       end
       B.new(nil, nil, opts).run(&block)
     end
+
+    def verbose?
+      @chatty
+    end
   end
 end

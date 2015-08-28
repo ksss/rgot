@@ -4,7 +4,6 @@ module Rgot
   class M
     class Options < Struct.new(
       :require_paths,
-      :verbose,
       :bench,
       :benchtime,
       :timeout,
@@ -45,7 +44,7 @@ module Rgot
         puts "FAIL"
         return 1
       end
-      puts "PASS" if @opts.verbose
+      puts "PASS" if Rgot.verbose?
       run_benchmarks
       0
     end
@@ -55,10 +54,8 @@ module Rgot
     def run_tests
       ok = true
       @tests.each do |test|
-        opts = T::Options.new
-        opts.verbose = @opts.verbose
-        t = T.new(test.module, test.name.to_sym, opts)
-        if @opts.verbose
+        t = T.new(test.module, test.name.to_sym)
+        if Rgot.verbose?
           puts "=== RUN #{test.name}"
         end
         t.run
@@ -106,7 +103,7 @@ module Rgot
     def run_examples
       ok = true
       @examples.each do |example|
-        if @opts.verbose
+        if Rgot.verbose?
           puts "=== RUN #{example.name}"
         end
         example.module.extend(example.module)
