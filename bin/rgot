@@ -3,7 +3,7 @@ require 'optparse'
 require 'rgot'
 
 opts = Rgot::M::Options.new
-opts.require_paths = []
+require_paths = []
 parser = OptionParser.new do |o|
   o.on '-v', '--verbose', "log all tests" do |arg|
     Rgot.class_eval{ @chatty = arg }
@@ -31,14 +31,14 @@ parser = OptionParser.new do |o|
     opts.thread = arg
   end
   o.on '--require [path]', "load some code before running" do |arg|
-    opts.require_paths << arg
+    require_paths << arg
   end
   o.on '--load-path [path]', "Specify $LOAD_PATH directory" do |arg|
     $LOAD_PATH.unshift(arg)
   end
 end
 parser.parse!(ARGV)
-opts.require_paths.each do |path|
+require_paths.each do |path|
   require path
 end
 

@@ -3,7 +3,6 @@ require 'stringio'
 module Rgot
   class M
     class Options < Struct.new(
-      :require_paths,
       :bench,
       :benchtime,
       :timeout,
