@@ -38,10 +38,39 @@ module Rgot
     end
 
     def log(*args)
+      internal_log(args.map(&:to_s).join(' '))
+    end
+
+    def logf(*args)
       internal_log(sprintf(*args))
     end
 
+    def error(*args)
+      internal_log(args.map(&:to_s).join(' '))
+      fail!
+    end
+
+    def errorf(*args)
+      internal_log(sprintf(*args))
+      fail!
+    end
+
+    def fatal(*args)
+      internal_log(args.map(&:to_s).join(' '))
+      fail_now
+    end
+
+    def fatalf(*args)
+      internal_log(sprintf(*args))
+      fail_now
+    end
+
     def skip(*args)
+      internal_log(args.map(&:to_s).join(' '))
+      skip_now
+    end
+
+    def skipf(*args)
       internal_log(sprintf(*args))
       skip_now
     end
@@ -50,16 +79,6 @@ module Rgot
       skip!
       finish!
       throw :skip
-    end
-
-    def error(*args)
-      internal_log(sprintf(*args))
-      fail!
-    end
-
-    def fatal(msg)
-      internal_log(msg)
-      fail_now
     end
 
     def fail_now
