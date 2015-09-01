@@ -74,59 +74,62 @@ modules = Object.constants.select { |c|
 
 code = 0
 modules.each do |test_module|
-  pid = fork {
-    tests = []
-    benchmarks = []
-    examples = []
-    main = nil
-    methods = test_module.instance_methods.sort
-    methods.grep(/\Atest_/).each do |m|
-      if m == :test_main && main.nil?
-        main = Rgot::InternalTest.new(test_module, m)
-      else
-        tests << Rgot::InternalTest.new(test_module, m)
-      end
-    end
-
-    methods.grep(/\Abenchmark_/).each do |m|
-      benchmarks << Rgot::InternalBenchmark.new(test_module, m)
-    end
-
-    methods.grep(/\Aexample_?/).each do |m|
-      examples << Rgot::InternalExample.new(test_module, m)
-    end
-
-    duration = Rgot.now
-    at_exit {
-      template = "%s\t%s\t%.3fs"
-
-      case $!
-      when SystemExit
-        if $!.success?
-          # exit 0
-          puts sprintf(template, "ok", test_module, Rgot.now - duration)
+  begin
+    pid = fork {
+      tests = []
+      benchmarks = []
+      examples = []
+      main = nil
+      methods = test_module.instance_methods.sort
+      methods.grep(/\Atest_/).each do |m|
+        if m == :test_main && main.nil?
+          main = Rgot::InternalTest.new(test_module, m)
         else
-          # exit 1
+          tests << Rgot::InternalTest.new(test_module, m)
+        end
+      end
+
+      methods.grep(/\Abenchmark_/).each do |m|
+        benchmarks << Rgot::InternalBenchmark.new(test_module, m)
+      end
+
+      methods.grep(/\Aexample_?/).each do |m|
+        examples << Rgot::InternalExample.new(test_module, m)
+      end
+
+      duration = Rgot.now
+      at_exit {
+        template = "%s\t%s\t%.3fs"
+
+        case $!
+        when SystemExit
+          if $!.success?
+            # exit 0
+            puts sprintf(template, "ok", test_module, Rgot.now - duration)
+          else
+            # exit 1
+            puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
+          end
+        when NilClass
+          # not raise, not exit
+        else
+          # any exception
           puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
         end
-      when NilClass
-        # not raise, not exit
+      }
+      m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
+      if main
+        main.module.extend main.module
+        main.module.instance_method(main.name).bind(main.module).call(m)
       else
-        # any exception
-        puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
+        exit m.run
       end
     }
-    m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
-    if main
-      main.module.extend main.module
-      main.module.instance_method(main.name).bind(main.module).call(m)
-    else
-      exit m.run
+  ensure
+    _, status = Process.waitpid2(pid)
+    unless status.success?
+      code = 1
     end
-  }
-  _, status = Process.waitpid2(pid)
-  unless status.success?
-    code = 1
   end
 end
 
