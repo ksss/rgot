@@ -10,6 +10,7 @@ Rgot is a testing package convert from golang testing.
 ### Usage
 
 test/sample.rb
+
 ```ruby
 class Sample
   def sum(i, j)
@@ -19,6 +20,7 @@ end
 ```
 
 test/pass_test.rb
+
 ```ruby
 module SampleTest
   class TypeSum < Struct.new(:left, :right, :expect)
@@ -53,7 +55,7 @@ PASS
 ok	0.001s
 ```
 
-# Feature
+# Features
 
 ## Testing
 
@@ -277,6 +279,25 @@ You can set timeout sec for testing (default 0).
 
 Fail testing and print raised exception message to STDERR if timeout.
 
+# Rgot.benchmark
+
+Run benchmark function without framework.
+
+```ruby
+result = Rgot.benchmark do |b|
+  i = 0
+  while i < b.n
+    some_func()
+    i += 1
+  end
+end
+puts result #=> 100000	100 ns/op
+```
+
+# Rgot.verbose?
+
+Check running with option verbose true/false.
+
 # Rgot::M (Main)
 
 Main method run first on testing.
@@ -321,12 +342,20 @@ end
 ## Rgot::Common#log
 
 ```ruby
-t.log("wooooo")
+t.log("wooooo", 1, 2, 3)
 ```
 
 Write any log message.
 
 But this message to show need -v option.
+
+## Rgot::Common#logf
+
+Write any log message like sprintf.
+
+```ruby
+t.logf("%d-%s", 10, "foo")
+```
 
 ## Rgot::Common#error
 
@@ -335,6 +364,22 @@ t.error("expect #{a} got #{b}")
 ```
 
 Test fail and show some error message.
+
+## Rgot::Common#errorf
+
+Fail loggin same as logf
+
+## Rgot::Common#fatal
+
+Testing stop and fail with log.
+
+```ruby
+t.fatal("fatal error!")
+```
+
+## Rgot::Common#fatalf
+
+Fatal logging same as logf
 
 ## Rgot::Common#skip
 
@@ -345,6 +390,10 @@ t.skip("this method was skipped")
 Skip current testing method.
 
 And run to next testing method.
+
+## Rgot::Common#skipf
+
+Skip logging same as logf
 
 # Rgot::T (Testing)
 
