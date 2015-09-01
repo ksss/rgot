@@ -89,7 +89,6 @@ module Rgot
 
     def run_n(n, block=nil)
       GC.start
-      i = 0
       @n = n
       reset_timer
       start_timer
