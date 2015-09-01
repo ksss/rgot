@@ -279,7 +279,11 @@ You can set timeout sec for testing (default 0).
 
 Fail testing and print raised exception message to STDERR if timeout.
 
-# Rgot.benchmark
+# Methods
+
+## Rgot
+
+### Rgot.benchmark
 
 Run benchmark function without framework.
 
@@ -294,11 +298,11 @@ end
 puts result #=> 100000	100 ns/op
 ```
 
-# Rgot.verbose?
+### Rgot.verbose?
 
 Check running with option verbose true/false.
 
-# Rgot::M (Main)
+## Rgot::M (Main)
 
 Main method run first on testing.
 
@@ -333,13 +337,13 @@ module TestSomeCode
 end
 ```
 
-# Rgot::Common
+## Rgot::Common
 
 `Rgot::Common` is inherited to `Rgot::T` and `Rgot::B`
 
 `Rgot::Common` have some logging method.
 
-## Rgot::Common#log
+### Rgot::Common#log
 
 ```ruby
 t.log("wooooo", 1, 2, 3)
@@ -349,7 +353,7 @@ Write any log message.
 
 But this message to show need -v option.
 
-## Rgot::Common#logf
+### Rgot::Common#logf
 
 Write any log message like sprintf.
 
@@ -357,7 +361,7 @@ Write any log message like sprintf.
 t.logf("%d-%s", 10, "foo")
 ```
 
-## Rgot::Common#error
+### Rgot::Common#error
 
 ```ruby
 t.error("expect #{a} got #{b}")
@@ -365,11 +369,11 @@ t.error("expect #{a} got #{b}")
 
 Test fail and show some error message.
 
-## Rgot::Common#errorf
+### Rgot::Common#errorf
 
 Fail loggin same as logf
 
-## Rgot::Common#fatal
+### Rgot::Common#fatal
 
 Testing stop and fail with log.
 
@@ -377,11 +381,11 @@ Testing stop and fail with log.
 t.fatal("fatal error!")
 ```
 
-## Rgot::Common#fatalf
+### Rgot::Common#fatalf
 
 Fatal logging same as logf
 
-## Rgot::Common#skip
+### Rgot::Common#skip
 
 ```ruby
 t.skip("this method was skipped")
@@ -391,11 +395,11 @@ Skip current testing method.
 
 And run to next testing method.
 
-## Rgot::Common#skipf
+### Rgot::Common#skipf
 
 Skip logging same as logf
 
-# Rgot::T (Testing)
+## Rgot::T (Testing)
 
 Testing is a main usage of this package.
 
@@ -408,13 +412,13 @@ end
 
 The `t` variable is instance of `Rgot::T` class means Testing.
 
-# Rgot::B (Benchmark)
+## Rgot::B (Benchmark)
 
 For Benchmark class.
 
 Can use log methods same as `Rgot::T` class
 
-## Rgot::B#n
+### Rgot::B#n
 
 Automatic number calculated by running time.
 
@@ -430,7 +434,7 @@ def benchmark_something(b)
 end
 ```
 
-## Rgot::B#reset_timer
+### Rgot::B#reset_timer
 
 Reset benchmark timer
 
@@ -446,15 +450,15 @@ def benchmark_something(b)
 end
 ```
 
-## Rgot::B#start_timer
+### Rgot::B#start_timer
 
 Start benchmark timer
 
-## Rgot::B#stop_timer
+### Rgot::B#stop_timer
 
 Stop benchmark timer
 
-## Rgot::B#run_parallel
+### Rgot::B#run_parallel
 
 Start parallel benchmark using `fork` and `Thread.new`.
 
@@ -462,9 +466,9 @@ This method should be call with block.
 
 The block argument is instance of Rgot::PB.
 
-# Rgot::PB (Parallel Benchmark)
+## Rgot::PB (Parallel Benchmark)
 
-## Rgot::PB#next
+### Rgot::PB#next
 
 Should be call this when parallel benchmark.
 
