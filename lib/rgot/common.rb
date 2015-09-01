@@ -14,15 +14,15 @@ module Rgot
     end
 
     def failed?
-      @failed
+      @mutex.synchronize { @failed }
     end
 
     def skipped?
-      @skipped
+      @mutex.synchronize { @skipped }
     end
 
     def finished?
-      @finished
+      @mutex.synchronize { @finished }
     end
 
     def fail!
