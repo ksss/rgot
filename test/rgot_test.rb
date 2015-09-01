@@ -78,7 +78,7 @@ module RgotTest
   end
 
   def test_benchmark(t)
-    cmd = "rgot test/benchmark_test.rb --benchtime 0.4 --bench sum"
+    cmd = "rgot test/benchmark_test.rb --benchtime 0.4 --bench sum --cpu=1"
     out = `#{cmd}`
     if /benchmark_sum\s+\d+\s+\d+\s+ns\/op/ !~ out
       t.error("expect output benchmark report. got #{out}")
@@ -99,7 +99,7 @@ OUT
   end
 
   def test_benchmark_skip(t)
-    cmd = "rgot test/benchmark_test.rb --bench skip"
+    cmd = "rgot test/benchmark_test.rb --bench skip --cpu=1"
     out = `#{cmd}`
     expect_out = <<-'OUT'
 benchmark_skip\t\d\t\d\s+ns/op

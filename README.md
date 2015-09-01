@@ -236,7 +236,7 @@ Set `someone` if you only run benchmark to match `someone` method.(e.g. benchmar
 
 Benchmark for parallel performance.
 
-`--cpu` option set process counts (default 1).
+`--cpu` option set process counts (default `Etc.nprocessors`).
 
 And `--thread` option set thread counts (default 1).
 

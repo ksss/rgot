@@ -1,4 +1,5 @@
 require 'stringio'
+require 'etc'
 
 module Rgot
   class M
@@ -15,7 +16,7 @@ module Rgot
       raise ArgumentError, "missing keyword: tests" unless tests
       raise ArgumentError, "missing keyword: benchmarks" unless benchmarks
       raise ArgumentError, "missing keyword: examples" unless examples
-      @cpu_list = (opts.cpu || "1").split(',').map { |i|
+      @cpu_list = (opts.cpu || "#{Etc.nprocessors}").split(',').map { |i|
         j = i.to_i
         raise Rgot::OptionError, "invalid value #{i.inspect} for --cpu" unless 0 < j
         j
