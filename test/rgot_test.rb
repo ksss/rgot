@@ -55,7 +55,7 @@ module RgotTest
     if /`sleep': execution expired \(Timeout::Error\)/ !~ err
       error_class = err.match(/\((.*?)\)/)[1]
       t.log(err)
-      t.error("expect NoMethodError got #{error_class}")
+      t.error("expect Timeout::Error got #{error_class}")
     end
     if /^ok\s+\d/ =~ out
       t.error("expect not print 'ok' got #{out}")
