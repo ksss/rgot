@@ -16,7 +16,8 @@ module Rgot
       raise ArgumentError, "missing keyword: tests" unless tests
       raise ArgumentError, "missing keyword: benchmarks" unless benchmarks
       raise ArgumentError, "missing keyword: examples" unless examples
-      @cpu_list = (opts.cpu || "#{Etc.nprocessors}").split(',').map { |i|
+      cpu = opts.cpu || "#{Etc.respond_to?(:nprocessors) ? Etc.nprocessors : "1"}"
+      @cpu_list = cpu.split(',').map { |i|
         j = i.to_i
         raise Rgot::OptionError, "invalid value #{i.inspect} for --cpu" unless 0 < j
         j
