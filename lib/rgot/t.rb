@@ -33,7 +33,13 @@ module Rgot
     end
 
     def call
-      @module.instance_method(@name).bind(@module).call(self)
+      test_method = @module.instance_method(@name).bind(@module)
+      if test_method.arity != 1
+        path, line = test_method.source_location
+        warn "#{path}:#{line} `#{test_method.name}' is not running. It's a testing method name, But not have argument"
+      else
+        test_method.call(self)
+      end
     end
   end
 end
