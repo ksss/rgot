@@ -39,20 +39,24 @@ module Rgot
 
     def log(*args)
       internal_log(args.map(&:to_s).join(' '))
+      nil
     end
 
     def logf(*args)
       internal_log(sprintf(*args))
+      nil
     end
 
     def error(*args)
       internal_log(args.map(&:to_s).join(' '))
       fail!
+      nil
     end
 
     def errorf(*args)
       internal_log(sprintf(*args))
       fail!
+      nil
     end
 
     def fatal(*args)
@@ -90,7 +94,8 @@ module Rgot
     private
 
     def decorate(str)
-      c = caller[2] # internal_log -> other log -> running method
+      # internal_log -> synchronize -> internal_log -> other log -> running method
+      c = caller[4]
       path = c.sub(/:.*/, '')
       line = c.match(/:(\d+?):/)[1]
       relative_path = Pathname.new(path).relative_path_from(Pathname.new(Dir.pwd)).to_s
