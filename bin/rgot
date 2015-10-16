@@ -47,7 +47,7 @@ ARGV.each do |target|
     if File.file?(target)
       require File.expand_path(target)
     elsif File.directory?(target)
-      Dir.glob("./#{target}/*_test.rb") do |i|
+      Dir.glob("./#{target}/**/*_test.rb") do |i|
         require i
       end
     else
