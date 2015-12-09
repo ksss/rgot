@@ -42,8 +42,12 @@ require_paths.each do |path|
   require path
 end
 
-ARGV.each do |target|
-  if target
+if ARGV.empty?
+  Dir.glob("./**/*_test.rb") do |i|
+    require i
+  end
+else
+  ARGV.each do |target|
     if File.file?(target)
       require File.expand_path(target)
     elsif File.directory?(target)
@@ -52,10 +56,6 @@ ARGV.each do |target|
       end
     else
       puts target
-    end
-  else
-    Dir.glob("./**/*_test.rb") do |i|
-      require i
     end
   end
 end
