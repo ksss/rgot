@@ -105,7 +105,7 @@ modules.each do |test_module|
         when SystemExit
           if $!.success?
             # exit 0
-            puts sprintf(template, "ok", test_module, Rgot.now - duration)
+            puts sprintf(template, "ok  ", test_module, Rgot.now - duration)
           else
             # exit 1
             puts sprintf(template, "FAIL", test_module, Rgot.now - duration)

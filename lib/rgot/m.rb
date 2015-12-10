@@ -58,7 +58,7 @@ module Rgot
       @tests.each do |test|
         t = T.new(test.module, test.name.to_sym)
         if Rgot.verbose?
-          puts "=== RUN #{test.name}"
+          puts "=== RUN   #{test.name}"
         end
         t.run
         t.report
