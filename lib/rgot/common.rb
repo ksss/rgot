@@ -1,4 +1,5 @@
 require 'thread'
+require 'pathname'
 
 module Rgot
   class Common

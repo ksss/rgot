@@ -1,5 +1,6 @@
 require 'stringio'
 require 'etc'
+require 'timeout'
 
 module Rgot
   class M
