@@ -156,15 +156,15 @@ OUT
     out = `#{cmd}`
     expect_out = <<-OUT.chomp
 got:
+ok go
+want:
+ng back
+got:
 Hello
 I'm example
 want:
 bye
 I'm fail
-got:
-ok go
-want:
-ng back
 FAIL
 FAIL	ExamplePassTest
 OUT
