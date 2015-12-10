@@ -95,7 +95,13 @@ module Rgot
       if block
         block.call(self)
       else
-        @module.instance_method(@name).bind(@module).call(self)
+        bench_method = @module.instance_method(@name).bind(@module)
+        if bench_method.arity == 0
+          path, line = bench_method.source_location
+          self.skip "#{path}:#{line} `#{bench_method.name}' is not running. It's a benchmark method name, But not have argument"
+        else
+          bench_method.call(self)
+        end
       end
       stop_timer
     end
