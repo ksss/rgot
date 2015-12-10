@@ -46,7 +46,7 @@ module Rgot
         puts "FAIL"
         return 1
       end
-      puts "PASS" if Rgot.verbose?
+      puts "PASS"
       run_benchmarks
       0
     end
