@@ -20,7 +20,7 @@ module Rgot
 
     def report
       duration = Rgot.now - @start
-      template = "--- %s: %s (%.5fs)\n%s"
+      template = "--- %s: %s (%.2fs)\n%s"
       if failed?
         printf template, "FAIL", @name, duration, @output
       elsif Rgot.verbose?
