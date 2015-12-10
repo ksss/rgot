@@ -102,13 +102,14 @@ OUT
     cmd = "rgot test/benchmark_test.rb --bench skip --cpu=1"
     out = `#{cmd}`
     expect_out = <<-'OUT'
-benchmark_skip\t\d\t\d\s+ns/op
+PASS
+benchmark_skip\s+\d\s+\d\s+ns/op
 ---\s+BENCH:\s+benchmark_skip
-\t.*?:\s+skip!
-ok\tBenchmarkTest\t\d.\d+s
+\s+.*?:\s+skip!
+ok\s+BenchmarkTest\s+\d.\d+s
 OUT
     if /#{expect_out}/ !~ out
-      t.error("expect output not match")
+      t.errorf("expect output not match want:%s got:%s", expect_out, out)
     end
   end
 
