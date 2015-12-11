@@ -156,10 +156,12 @@ OUT
     cmd = "rgot test/example_fail_test.rb"
     out = `#{cmd}`
     expect_out = <<-OUT.chomp
+--- FAIL: example_singleline (\d+.\d+s)
 got:
 ok go
 want:
 ng back
+--- FAIL: example_multiline (\d+.\d+s)
 got:
 Hello
 I'm example
@@ -169,7 +171,7 @@ I'm fail
 FAIL
 FAIL	ExamplePassTest
 OUT
-    if out.index(expect_out) != 0
+    if Regexp.new(expect_out) =~ out
       t.error("\n--- expect:\n#{expect_out}\n--- got:\n#{out}\n")
     end
   end
