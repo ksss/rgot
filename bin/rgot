@@ -9,7 +9,7 @@ parser = OptionParser.new do |o|
     Rgot.class_eval{ @chatty = arg }
   end
   o.on '--version', "show Rgot version" do |arg|
-    puts "Rgot v#{Rgot::VERSION}"
+    puts "rgot #{Rgot::VERSION} (ruby #{RUBY_VERSION})"
     exit 0
   end
   o.on '--bench [regexp]', "benchmark" do |arg|
