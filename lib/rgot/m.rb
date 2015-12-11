@@ -106,8 +106,10 @@ module Rgot
       ok = true
       @examples.each do |example|
         if Rgot.verbose?
-          puts "=== RUN #{example.name}"
+          puts "=== RUN   #{example.name}"
         end
+
+        start = Rgot.now
         example.module.extend(example.module)
         method = example.module.instance_method(example.name).bind(example.module)
         out, err = capture do
@@ -117,12 +119,17 @@ module Rgot
         r = ExampleParser.new(File.read(file))
         r.parse
         e = r.examples.find{|e| e.name == example.name}
+
+        duration = Rgot.now - start
         if e && e.output.strip != out.strip
+          printf("--- FAIL: %s (%.2f)\n", e.name, duration)
           ok = false
           puts "got:"
           puts out.strip
           puts "want:"
           puts e.output.strip
+        elsif Rgot.verbose?
+          printf("--- PASS: %s (%.2f)\n", e.name, duration)
         end
       end
       ok
