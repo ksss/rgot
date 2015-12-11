@@ -108,6 +108,7 @@ modules.each do |test_module|
             puts sprintf(template, "ok  ", test_module, Rgot.now - duration)
           else
             # exit 1
+            puts "exit status #{$!.status}"
             puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
           end
         when NilClass
