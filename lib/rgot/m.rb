@@ -122,14 +122,14 @@ module Rgot
 
         duration = Rgot.now - start
         if e && e.output.strip != out.strip
-          printf("--- FAIL: %s (%.2f)\n", e.name, duration)
+          printf("--- FAIL: %s (%.2fs)\n", e.name, duration)
           ok = false
           puts "got:"
           puts out.strip
           puts "want:"
           puts e.output.strip
         elsif Rgot.verbose?
-          printf("--- PASS: %s (%.2f)\n", e.name, duration)
+          printf("--- PASS: %s (%.2fs)\n", e.name, duration)
         end
       end
       ok
