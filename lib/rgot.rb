@@ -8,20 +8,11 @@ module Rgot
   require 'rgot/benchmark_result'
   require 'rgot/example_parser'
 
-  class OptionError < StandardError
-  end
-
-  class InternalTest < Struct.new(:module, :name)
-  end
-
-  class InternalBenchmark < Struct.new(:module, :name)
-  end
-
-  class InternalExample < Struct.new(:module, :name)
-  end
-
-  class ExampleOutput < Struct.new(:name, :output)
-  end
+  OptionError = Class.new(StandardError)
+  InternalTest = Struct.new(:module, :name)
+  InternalBenchmark = Struct.new(:module, :name)
+  InternalExample = Struct.new(:module, :name)
+  ExampleOutput = Struct.new(:name, :output)
 
   class << self
     def now

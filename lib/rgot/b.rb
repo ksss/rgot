@@ -1,10 +1,10 @@
 module Rgot
   class B < Common
-    class Options < Struct.new(
+    Options = Struct.new(
       :procs,
       :threads,
-      :benchtime
-    ); end
+      :benchtime,
+    )
 
     attr_accessor :n
     def initialize(benchmark_module, name, opts=Options.new)
