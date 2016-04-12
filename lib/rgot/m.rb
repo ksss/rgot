@@ -12,11 +12,7 @@ module Rgot
       :thread,
     ); end
 
-    # Ruby-2.0.0 wants default value of keyword_argument
-    def initialize(tests: nil, benchmarks: nil, examples: nil, opts: Options.new)
-      raise ArgumentError, "missing keyword: tests" unless tests
-      raise ArgumentError, "missing keyword: benchmarks" unless benchmarks
-      raise ArgumentError, "missing keyword: examples" unless examples
+    def initialize(tests:, benchmarks:, examples:, opts: Options.new)
       cpu = opts.cpu || "#{Etc.respond_to?(:nprocessors) ? Etc.nprocessors : "1"}"
       @cpu_list = cpu.split(',').map { |i|
         j = i.to_i

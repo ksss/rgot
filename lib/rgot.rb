@@ -24,14 +24,8 @@ module Rgot
   end
 
   class << self
-    if "2.0.0" < RUBY_VERSION
-      def now
-        Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      end
-    else
-      def now
-        Time.now
-      end
+    def now
+      Process.clock_gettime(Process::CLOCK_MONOTONIC)
     end
 
     def benchmark(opts_hash={}, &block)
