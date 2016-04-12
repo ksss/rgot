@@ -1,4 +1,4 @@
-module RgotTest
+module RgotCommonTest
   def test_common_log(t)
     c = Rgot::Common.new
     ret, line = c.log(1, 2, 3), __LINE__
