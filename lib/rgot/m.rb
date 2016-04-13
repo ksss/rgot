@@ -34,10 +34,10 @@ module Rgot
       test_ok = false
       example_ok = false
 
-      Timeout.timeout(@opts.timeout.to_f) {
+      Timeout.timeout(@opts.timeout.to_f) do
         test_ok = run_tests
         example_ok = run_examples
-      }
+      end
       if !test_ok || !example_ok
         puts "FAIL"
         return 1

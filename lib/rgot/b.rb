@@ -42,7 +42,7 @@ module Rgot
     def run(&block)
       n = 1
       benchtime = (@opts.benchtime || 1).to_f
-      catch(:skip) {
+      catch(:skip) do
         run_n(n.to_i, block)
         while !failed? && @duration < benchtime && @n < 1e9
           if @duration < (benchtime / 100.0)
@@ -61,7 +61,7 @@ module Rgot
           end
           run_n(@n.to_i, block)
         end
-      }
+      end
 
       BenchmarkResult.new(n: @n, t: @duration)
     end
@@ -73,13 +73,13 @@ module Rgot
       threads = (@opts.threads || 1)
 
       procs.times do
-        fork {
+        fork do
           Array.new(threads) {
             Thread.new {
               yield PB.new(bn: @n)
             }.tap { |t| t.abort_on_exception = true }
           }.each(&:join)
-        }
+        end
       end
       @n *= procs * threads
       Process.waitall

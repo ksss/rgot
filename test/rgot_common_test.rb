@@ -52,11 +52,11 @@ module RgotCommonTest
   def test_common_fatal(t)
     c = Rgot::Common.new
     ret = line = nil
-    catch(:skip) {
+    catch(:skip) do
       line = __LINE__
       ret = c.fatal(1, 2, 3)
       raise "never reach"
-    }
+    end
     if ret != nil
       t.error("expect return nil got #{ret}")
     end
@@ -71,11 +71,11 @@ module RgotCommonTest
   def test_common_fatalf(t)
     c = Rgot::Common.new
     ret = line = nil
-    catch(:skip) {
+    catch(:skip) do
       line = __LINE__
       ret = c.fatalf("%d-%d-%d", 1, 2, 3)
       raise "never reach"
-    }
+    end
     if ret != nil
       t.error("expect return nil got #{ret}")
     end
@@ -90,11 +90,11 @@ module RgotCommonTest
   def test_common_skip(t)
     c = Rgot::Common.new
     ret = line = nil
-    catch(:skip) {
+    catch(:skip) do
       line = __LINE__
       ret = c.skip(1, 2, 3)
       raise "never reach"
-    }
+    end
     if ret != nil
       t.error("expect return nil got #{ret}")
     end
@@ -109,11 +109,11 @@ module RgotCommonTest
   def test_common_skipf(t)
     c = Rgot::Common.new
     ret = line = nil
-    catch(:skip) {
+    catch(:skip) do
       line = __LINE__
       ret = c.skipf("%d-%d-%d", 1, 2, 3)
       raise "never reach"
-    }
+    end
     if ret != nil
       t.error("expect return nil got #{ret}")
     end
