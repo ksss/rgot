@@ -60,7 +60,7 @@ module RgotCommonTest
     if ret != nil
       t.error("expect return nil got #{ret}")
     end
-    if /test\/rgot_common_test.rb:#{line+1}.*?1 2 3/ !~ c.output
+    if /test\/rgot_common_test.rb:#{line + 1}.*?1 2 3/ !~ c.output
       t.error("expect output '1 2 3' got #{c.output.inspect}")
     end
     unless c.failed? && c.finished?
@@ -79,7 +79,7 @@ module RgotCommonTest
     if ret != nil
       t.error("expect return nil got #{ret}")
     end
-    if /test\/rgot_common_test.rb:#{line+1}.*?1-2-3/ !~ c.output
+    if /test\/rgot_common_test.rb:#{line + 1}.*?1-2-3/ !~ c.output
       t.error("expect output '1-2-3' got #{c.output.inspect}")
     end
     unless c.failed? && c.finished?
@@ -98,7 +98,7 @@ module RgotCommonTest
     if ret != nil
       t.error("expect return nil got #{ret}")
     end
-    if /test\/rgot_common_test.rb:#{line+1}.*?1 2 3/ !~ c.output
+    if /test\/rgot_common_test.rb:#{line + 1}.*?1 2 3/ !~ c.output
       t.error("expect output '1 2 3' got #{c.output.inspect}")
     end
     unless c.skipped? && c.finished?
@@ -117,7 +117,7 @@ module RgotCommonTest
     if ret != nil
       t.error("expect return nil got #{ret}")
     end
-    if /test\/rgot_common_test.rb:#{line+1}.*?1-2-3/ !~ c.output
+    if /test\/rgot_common_test.rb:#{line + 1}.*?1-2-3/ !~ c.output
       t.error("expect output '1-2-3' got #{c.output.inspect}")
     end
     unless c.skipped? && c.finished?

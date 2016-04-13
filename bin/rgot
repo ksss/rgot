@@ -6,7 +6,7 @@ opts = Rgot::M::Options.new
 require_paths = []
 parser = OptionParser.new do |o|
   o.on '-v', '--verbose', "log all tests" do |arg|
-    Rgot.class_eval{ @chatty = arg }
+    Rgot.class_eval { @chatty = arg }
   end
   o.on '--version', "show Rgot version" do |arg|
     puts "rgot #{Rgot::VERSION} (ruby #{RUBY_VERSION})"

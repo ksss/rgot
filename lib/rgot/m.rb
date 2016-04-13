@@ -114,7 +114,7 @@ module Rgot
         file = method.source_location[0]
         r = ExampleParser.new(File.read(file))
         r.parse
-        e = r.examples.find{|e| e.name == example.name}
+        e = r.examples.find { |e| e.name == example.name }
 
         duration = Rgot.now - start
         if e && e.output.strip != out.strip

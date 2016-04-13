@@ -7,7 +7,7 @@ module Rgot
     )
 
     attr_accessor :n
-    def initialize(benchmark_module, name, opts=Options.new)
+    def initialize(benchmark_module, name, opts = Options.new)
       super()
       @n = 1
       @module = benchmark_module
@@ -87,7 +87,7 @@ module Rgot
 
     private
 
-    def run_n(n, block=nil)
+    def run_n(n, block = nil)
       GC.start
       @n = n
       reset_timer

@@ -19,7 +19,7 @@ module Rgot
       Process.clock_gettime(Process::CLOCK_MONOTONIC)
     end
 
-    def benchmark(opts_hash={}, &block)
+    def benchmark(opts_hash = {}, &block)
       opts = B::Options.new
       opts_hash.each do |k, v|
         opts[k] = v
