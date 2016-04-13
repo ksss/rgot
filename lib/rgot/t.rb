@@ -8,14 +8,12 @@ module Rgot
     end
 
     def run
-      begin
-        catch(:skip) { call }
-        finish!
-      rescue => e
-        fail!
-        report
-        raise e
-      end
+      catch(:skip) { call }
+      finish!
+    rescue => e
+      fail!
+      report
+      raise e
     end
 
     def report

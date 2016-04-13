@@ -13,7 +13,7 @@ module Rgot
     ); end
 
     def initialize(tests:, benchmarks:, examples:, opts: Options.new)
-      cpu = opts.cpu || "#{Etc.respond_to?(:nprocessors) ? Etc.nprocessors : "1"}"
+      cpu = opts.cpu || (Etc.respond_to?(:nprocessors) ? Etc.nprocessors : '1').to_s
       @cpu_list = cpu.split(',').map { |i|
         j = i.to_i
         raise Rgot::OptionError, "invalid value #{i.inspect} for --cpu" unless 0 < j
