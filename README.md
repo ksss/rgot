@@ -131,6 +131,36 @@ end
 
 So, you can notice that the sample code is wrong.
 
+# Table Driven Tests
+
+```rb
+FLAGTESTS = [
+  ["%a", "[%a]"],
+  ["%-a", "[%-a]"],
+  ["%+a", "[%+a]"],
+  ["%#a", "[%#a]"],
+  ["% a", "[% a]"],
+  ["%0a", "[%0a]"],
+  ["%1.2a", "[%1.2a]"],
+  ["%-1.2a", "[%-1.2a]"],
+  ["%+1.2a", "[%+1.2a]"],
+  ["%-+1.2a", "[%+-1.2a]"],
+  ["%-+1.2abc", "[%+-1.2a]bc"],
+  ["%-1.2abc", "[%-1.2a]bc"],
+]
+
+def test_flag_parser(t)
+  FLAGTESTS.each do |input, output|
+    s = Flag.print(input)
+    unless s == output
+      t.errorf("Flag.print(%p) => %p, want %p", input, s, output)
+    end
+  end
+end
+```
+
+see https://github.com/golang/go/wiki/TableDrivenTests
+
 # Naming convention
 
 ## Filename
