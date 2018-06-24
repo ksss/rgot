@@ -108,7 +108,7 @@ module Rgot
         start = Rgot.now
         example.module.extend(example.module)
         method = example.module.instance_method(example.name).bind(example.module)
-        out, err = capture do
+        out, _ = capture do
           method.call
         end
         file = method.source_location[0]
