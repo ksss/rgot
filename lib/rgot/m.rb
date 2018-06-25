@@ -108,13 +108,13 @@ module Rgot
         start = Rgot.now
         example.module.extend(example.module)
         method = example.module.instance_method(example.name).bind(example.module)
-        out, err = capture do
+        out, _ = capture do
           method.call
         end
         file = method.source_location[0]
         r = ExampleParser.new(File.read(file))
         r.parse
-        e = r.examples.find { |e| e.name == example.name }
+        e = r.examples.find { |re| re.name == example.name }
 
         duration = Rgot.now - start
         if e && e.output.strip != out.strip
