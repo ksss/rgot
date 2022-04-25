@@ -70,7 +70,7 @@ module Rgot
           else
             warn "#{target} is not file or directory"
           end
-        end
+        end.compact
       end
     end
 
