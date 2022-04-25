@@ -1,7 +1,7 @@
 Rgot
 ===
 
-[![Build Status](https://travis-ci.org/ksss/rgot.svg)](https://travis-ci.org/ksss/rgot)
+[![Ruby](https://github.com/ksss/rgot/actions/workflows/main.yml/badge.svg)](https://github.com/ksss/rgot/actions/workflows/main.yml)
 
 Ruby + Golang Testing = Rgot
 
