@@ -1,0 +1,20 @@
+PATH
+  remote: .
+  specs:
+    rgot (1.1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (13.0.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler
+  rake
+  rgot!
+
+BUNDLED WITH
+   2.3.26
