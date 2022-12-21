@@ -9,16 +9,22 @@ module RgotTest
   def test_pass(t)
     cmd = "rgot test/pass_test.rb -v"
     out = `#{cmd}`
-    if /---\sPASS:\s.*/ !~ out
+    unless /PASS/ =~ out
       t.error("expect PASS `#{cmd}` got #{out}")
+    end
+    unless $?.success?
+      t.error("expect exit status 0, but got #{$?}")
     end
   end
 
   def test_fail(t)
     cmd = "rgot test/fail_test.rb -v"
     out = `#{cmd}`
-    if /---\sFAIL:\s.*/ !~ out
+    unless /FAIL/ =~ out
       t.error("expect FAIL `#{cmd}` got #{out}")
+    end
+    unless !$?.success?
+      t.error("expect exit status fail, but not")
     end
   end
 
@@ -33,7 +39,7 @@ module RgotTest
       t.log(err)
       t.error("expect NoMethodError got #{error_class}")
     end
-    if /---\sFAIL:\s.*/ !~ out
+    unless /FAIL/ =~ out
       t.error("expect FAIL `#{cmd}` got #{out}")
     end
   end
@@ -41,7 +47,7 @@ module RgotTest
   def test_skip(t)
     cmd = "rgot test/skip_test.rb -v"
     out = `#{cmd}`
-    if /skip testing/ !~ out
+    unless /SKIP/ =~ out
       t.error("expect skip `#{cmd}` got #{out}")
     end
   end
