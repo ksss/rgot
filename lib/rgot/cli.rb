@@ -93,7 +93,7 @@ module Rgot
               benchmarks = []
               examples = []
               main = nil
-              methods = test_module.instance_methods
+              methods = test_module.public_instance_methods
               methods.grep(/\Atest_/).each do |m|
                 if m == :test_main && main.nil?
                   main = Rgot::InternalTest.new(test_module, m)
@@ -134,6 +134,7 @@ module Rgot
               m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
               if main
                 main.module.extend main.module
+                # expect to call `exit` in `test_main`
                 main.module.instance_method(main.name).bind(main.module).call(m)
               else
                 exit m.run
