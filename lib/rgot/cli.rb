@@ -93,7 +93,7 @@ module Rgot
               benchmarks = []
               examples = []
               main = nil
-              methods = test_module.instance_methods
+              methods = test_module.public_instance_methods
               methods.grep(/\Atest_/).each do |m|
                 if m == :test_main && main.nil?
                   main = Rgot::InternalTest.new(test_module, m)
