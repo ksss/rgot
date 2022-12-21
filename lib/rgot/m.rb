@@ -57,7 +57,6 @@ module Rgot
           puts "=== RUN   #{test.name}"
         end
         t.run
-        t.report
         if t.failed?
           ok = false
         end
