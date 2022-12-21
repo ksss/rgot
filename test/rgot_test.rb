@@ -12,6 +12,9 @@ module RgotTest
     unless /PASS/ =~ out
       t.error("expect PASS `#{cmd}` got #{out}")
     end
+    unless $?.success?
+      t.error("expect exit status 0, but got #{$?}")
+    end
   end
 
   def test_fail(t)
@@ -19,6 +22,9 @@ module RgotTest
     out = `#{cmd}`
     unless /FAIL/ =~ out
       t.error("expect FAIL `#{cmd}` got #{out}")
+    end
+    unless !$?.success?
+      t.error("expect exit status fail, but not")
     end
   end
 
