@@ -134,6 +134,7 @@ module Rgot
               m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
               if main
                 main.module.extend main.module
+                # expect to call `exit` in `test_main`
                 main.module.instance_method(main.name).bind(main.module).call(m)
               else
                 exit m.run
