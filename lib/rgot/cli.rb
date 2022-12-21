@@ -148,7 +148,7 @@ module Rgot
         end
       end
 
-      exit code
+      code
     end
   end
 end
