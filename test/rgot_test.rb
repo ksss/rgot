@@ -77,7 +77,7 @@ module RgotTest
   end
 
   def test_main_method_return_code(t)
-    code = Rgot::M.new(tests: [], benchmarks: [], examples: []).run
+    code = Rgot::M.new(tests: [], benchmarks: [], examples: [], test_module: nil).run
     unless Integer === code
       t.error("Rgot::M#run return expect to exit code, got #{code}")
     end
