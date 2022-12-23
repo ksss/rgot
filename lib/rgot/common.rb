@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'thread'
 require 'pathname'
 
@@ -6,7 +8,7 @@ module Rgot
     attr_accessor :output
 
     def initialize
-      @output = ""
+      @output = "".dup
       @failed = false
       @skipped = false
       @finished = false

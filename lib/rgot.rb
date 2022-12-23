@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rgot
   require 'rgot/version'
   require 'rgot/common'
