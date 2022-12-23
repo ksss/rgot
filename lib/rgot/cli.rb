@@ -11,7 +11,7 @@ module Rgot
     def run
       opts = Rgot::M::Options.new
       parse_option(opts)
-      process_start(opts)
+      main_process(opts)
     end
 
     private
@@ -74,82 +74,82 @@ module Rgot
       end
     end
 
-    def process_start(opts)
+    def main_process(opts)
       code = 0
-      testing_files.map do |testing_file|
-        begin
-          pid = fork do
-            require testing_file
 
-            modules = Object.constants.select { |c|
-              next if c == :FileTest
-              /.*Test\z/ =~ c
-            }.map { |c|
-              Object.const_get(c)
-            }
-
-            modules.each do |test_module|
-              tests = []
-              benchmarks = []
-              examples = []
-              main = nil
-              methods = test_module.public_instance_methods
-              methods.grep(/\Atest_/).each do |m|
-                if m == :test_main && main.nil?
-                  main = Rgot::InternalTest.new(test_module, m)
-                else
-                  tests << Rgot::InternalTest.new(test_module, m)
-                end
-              end
-
-              methods.grep(/\Abenchmark_/).each do |m|
-                benchmarks << Rgot::InternalBenchmark.new(test_module, m)
-              end
-
-              methods.grep(/\Aexample_?/).each do |m|
-                examples << Rgot::InternalExample.new(test_module, m)
-              end
-
-              duration = Rgot.now
-              at_exit do
-                template = "%s\t%s\t%.3fs"
-
-                case $!
-                when SystemExit
-                  if $!.success?
-                    # exit 0
-                    puts sprintf(template, "ok  ", test_module, Rgot.now - duration)
-                  else
-                    # exit 1
-                    puts "exit status #{$!.status}"
-                    puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
-                  end
-                when NilClass
-                  # not raise, not exit
-                else
-                  # any exception
-                  puts sprintf(template, "FAIL", test_module, Rgot.now - duration)
-                end
-              end
-              m = Rgot::M.new(tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
-              if main
-                main.module.extend main.module
-                # expect to call `exit` in `test_main`
-                main.module.instance_method(main.name).bind(main.module).call(m)
-              else
-                exit m.run
-              end
-            end
-          end
-        ensure
-          _, status = Process.waitpid2(pid)
-          unless status.success?
-            code = 1
-          end
+      testing_files.each do |testing_file|
+        result = child_process(opts, testing_file)
+        unless result == 0
+          code = 1
         end
       end
 
       code
+    end
+
+    def child_process(opts, testing_file)
+      node = RubyVM::AbstractSyntaxTree.parse_file(testing_file).children[2]
+      test_module_name = find_toplevel_name(node)
+
+      load testing_file
+
+      test_module = Object.const_get(test_module_name)
+      tests = []
+      benchmarks = []
+      examples = []
+      main = nil
+      methods = test_module.public_instance_methods
+      methods.grep(/\Atest_/).each do |m|
+        if m == :test_main && main.nil?
+          main = Rgot::InternalTest.new(test_module, m)
+        else
+          tests << Rgot::InternalTest.new(test_module, m)
+        end
+      end
+
+      methods.grep(/\Abenchmark_/).each do |m|
+        benchmarks << Rgot::InternalBenchmark.new(test_module, m)
+      end
+
+      methods.grep(/\Aexample_?/).each do |m|
+        examples << Rgot::InternalExample.new(test_module, m)
+      end
+
+      m = Rgot::M.new(test_module: test_module, tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
+      if main
+        main.module.extend main.module
+        main.module.instance_method(:test_main).bind(main.module).call(m)
+      else
+        m.run
+      end
+    end
+
+    private
+
+    def find_toplevel_name(node)
+      case node.type
+      when :MODULE
+        find_toplevel_name(node.children.first)
+      when :CONST, :COLON3
+        node.children.first
+      when :COLON2
+        case node.children
+        in [nil, sym]
+          # module Foo
+          sym
+        in [namespace, sym]
+          # module Foo::Bar
+          find_toplevel_name(namespace)
+        end
+      when :BLOCK
+        module_node = node.children.find { |c| c.type == :MODULE }
+        unless module_node
+          raise "no module found"
+        end
+        find_toplevel_name(module_node)
+      else
+        raise node.type.to_s
+      end
     end
   end
 end
