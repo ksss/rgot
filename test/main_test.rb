@@ -3,7 +3,7 @@ module MainTest
     puts "start in main"
     code = m.run
     puts "end in main"
-    exit code
+    code
   end
 
   def test_some_1(t)

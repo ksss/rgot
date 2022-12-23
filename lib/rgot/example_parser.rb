@@ -10,7 +10,7 @@ module Rgot
       @examples = []
       @in_def = false
       @has_output = false
-      @output = ""
+      @output = "".dup
     end
 
     def on_def(method, args, body)

@@ -3,7 +3,7 @@ require 'open3'
 module RgotTest
   # This method should be running before testing
   def test_main(m)
-    exit m.run
+    m.run
   end
 
   def test_pass(t)
