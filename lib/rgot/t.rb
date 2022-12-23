@@ -18,15 +18,16 @@ module Rgot
     end
 
     def report
+      puts @output if Rgot.verbose? && !@output.empty?
       duration = Rgot.now - @start
-      template = "--- \e[%sm%s\e[m: %s (%.2fs)\n%s"
+      template = "--- \e[%sm%s\e[m: %s (%.2fs)\n"
       if failed?
-        printf template, [41, 1].join(';'), "FAIL", @name, duration, @output
+        printf template, [41, 1].join(';'), "FAIL", @name, duration
       elsif Rgot.verbose?
         if skipped?
-          printf template, [44, 1].join(';'), "SKIP", @name, duration, @output
+          printf template, [44, 1].join(';'), "SKIP", @name, duration
         else
-          printf template, [42, 1].join(';'), "PASS", @name, duration, @output
+          printf template, [42, 1].join(';'), "PASS", @name, duration
         end
       end
     end

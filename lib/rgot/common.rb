@@ -100,7 +100,8 @@ module Rgot
       path = c.sub(/:.*/, '')
       line = c.match(/:(\d+?):/)[1]
       relative_path = Pathname.new(path).relative_path_from(Pathname.new(Dir.pwd)).to_s
-      "\t#{relative_path}:#{line}: #{str}\n"
+      # Every line is indented at least 4 spaces.
+      "    #{relative_path}:#{line}: #{str}\n"
     end
 
     def internal_log(msg)

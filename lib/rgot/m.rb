@@ -50,6 +50,7 @@ module Rgot
 
       if !test_ok || !example_ok
         puts "FAIL"
+        puts "exit status 1"
         puts sprintf("%s\t%s\t%.3fs", "FAIL", @test_module, Rgot.now - duration)
 
         1
