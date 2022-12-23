@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Rgot
-  require 'rgot/version'
-  require 'rgot/common'
-  require 'rgot/m'
-  require 'rgot/t'
-  require 'rgot/b'
-  require 'rgot/pb'
-  require 'rgot/benchmark_result'
-  require 'rgot/example_parser'
+  autoload :VERSION, 'rgot/version'
+  autoload :Common, 'rgot/common'
+  autoload :M, 'rgot/m'
+  autoload :T, 'rgot/t'
+  autoload :B, 'rgot/b'
+  autoload :PB, 'rgot/pb'
+  autoload :BenchmarkResult, 'rgot/benchmark_result'
+  autoload :ExampleParser, 'rgot/example_parser'
 
   OptionError = Class.new(StandardError)
   InternalTest = Struct.new(:module, :name)
