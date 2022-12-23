@@ -341,7 +341,7 @@ And this is default virtual main code.
 ```ruby
 module TestSomeCode
   def test_main(m)
-    exit m.run
+    m.run
   end
 end
 ```
@@ -362,7 +362,7 @@ module TestSomeCode
     the_before_running_some_code
     code = m.run
     the_after_running_some_code
-    exit code
+    code
   end
 end
 ```
