@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rgot
   class T < Common
     def initialize(test_module, name)
