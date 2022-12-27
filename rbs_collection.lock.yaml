@@ -1,0 +1,37 @@
+---
+sources:
+- name: ruby/gem_rbs_collection
+  remote: https://github.com/ruby/gem_rbs_collection.git
+  revision: main
+  repo_dir: gems
+path: ".gem_rbs_collection"
+gems:
+- name: pathname
+  version: '0'
+  source:
+    type: stdlib
+- name: optparse
+  version: '0'
+  source:
+    type: stdlib
+- name: concurrent-ruby
+  version: '1.1'
+  source:
+    type: git
+    name: ruby/gem_rbs_collection
+    revision: 9576ce5b109170f1ba8a42671bfafb64ab95bd23
+    remote: https://github.com/ruby/gem_rbs_collection.git
+    repo_dir: gems
+- name: io-console
+  version: '0'
+  source:
+    type: stdlib
+- name: logger
+  version: '0'
+  source:
+    type: stdlib
+- name: monitor
+  version: '0'
+  source:
+    type: stdlib
+gemfile_lock_path: Gemfile.lock

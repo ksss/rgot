@@ -2,13 +2,15 @@
 
 module Rgot
   class B < Common
-    Options = Struct.new(
+    Options = _ = Struct.new(
       :procs,
       :threads,
       :benchtime,
     )
 
+    # @dynamic n, n=
     attr_accessor :n
+
     def initialize(benchmark_module, name, opts = Options.new)
       super()
       @n = 1
@@ -16,7 +18,7 @@ module Rgot
       @name = name
       @opts = opts
       @timer_on = false
-      @duration = 0
+      @duration = 0.0
       @module.extend @module if @module
     end
 
@@ -38,34 +40,34 @@ module Rgot
       if @timer_on
         @start = Rgot.now
       end
-      @duration = 0
+      @duration = 0.0
     end
 
     def run(&block)
       n = 1
       benchtime = (@opts.benchtime || 1).to_f
       catch(:skip) do
-        run_n(n.to_i, block)
-        while !failed? && @duration < benchtime && @n < 1e9
+        run_n(n, block)
+        while !failed? && @duration < benchtime && n < 1e9
           if @duration < (benchtime / 100.0)
-            @n *= 100
+            n *= 100
           elsif @duration < (benchtime / 10.0)
-            @n *= 10
+            n *= 10
           elsif @duration < (benchtime / 5.0)
-            @n *= 5
+            n *= 5
           elsif @duration < (benchtime / 2.0)
-            @n *= 2
+            n *= 2
           else
-            if @n.to_i == 1
+            if n == 1
               break
             end
-            @n *= 1.2
+            n = [(n * 1.2).to_i, n + 1].max || raise
           end
-          run_n(@n.to_i, block)
+          run_n(n, block)
         end
       end
 
-      BenchmarkResult.new(n: @n, t: @duration)
+      BenchmarkResult.new(n: n, t: @duration)
     end
 
     def run_parallel
@@ -83,7 +85,6 @@ module Rgot
           }.each(&:join)
         end
       end
-      @n *= procs * threads
       Process.waitall
     end
 

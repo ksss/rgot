@@ -2,6 +2,10 @@
 
 module Rgot
   class BenchmarkResult
+    # @dynamic n, t
+    attr_reader :n
+    attr_reader :t
+
     def initialize(n:, t:)
       @n = n
       @t = t

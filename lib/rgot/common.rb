@@ -5,6 +5,7 @@ require 'pathname'
 
 module Rgot
   class Common
+    # @dynamic output, output=
     attr_accessor :output
 
     def initialize
@@ -13,7 +14,7 @@ module Rgot
       @skipped = false
       @finished = false
       @start = Rgot.now
-      @mutex = Mutex.new
+      @mutex = Thread::Mutex.new
     end
 
     def failed?

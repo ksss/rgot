@@ -4,7 +4,10 @@ require 'ripper'
 
 module Rgot
   class ExampleParser < Ripper
+
+    # @dynamic examples, examples=
     attr_accessor :examples
+
     def initialize(code)
       super
       @examples = []

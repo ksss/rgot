@@ -1,0 +1,162 @@
+module Rgot
+  VERSION: "1.2.0"
+
+  def self.now: () -> Float
+  def self.benchmark: (?Hash[Symbol, String] opts_hash) { (B) -> void } -> BenchmarkResult
+  def self.verbose?: () -> bool
+
+  class Cli
+    @argv: Array[String]
+
+    def initialize: (untyped argv) -> void
+    def run: () -> void
+
+    private
+
+    def parse_option: (Rgot::M::Options opts) -> void
+    def main_process: (Rgot::M::Options opts) -> void
+    def testing_files: () -> Array[String]
+    def child_process: (Rgot::M::Options opts, String testing_file) -> Integer
+    # `node` is RubyVM::AbstractSyntaxTree::Node
+    def find_toplevel_name: (untyped node) -> Symbol
+  end
+
+  class Common
+    @failed: bool
+    @skipped: bool
+    @finished: bool
+    @start: Float
+    @mutex: Thread::Mutex
+
+    attr_accessor output: String
+
+    def initialize: () -> void
+
+    def failed?: () -> bool
+    def skipped?: () -> bool
+    def finished?: () -> bool
+    def fail!: () -> void
+    def skip!: () -> void
+    def finish!: () -> void
+    def log: (*untyped) -> nil
+    def logf: (*untyped) -> nil
+    def error: (*untyped) -> nil
+    def errorf: (*untyped) -> nil
+    def fatal: (*untyped) -> bot
+    def fatalf: (*untyped) -> bot
+    def skip: (*untyped) -> bot
+    def skipf: (*untyped) -> bot
+    def skip_now: () -> bot
+    def fail_now: () -> bot
+
+    private
+
+    def decorate: (String) -> String
+    def internal_log: (String msg) -> void
+  end
+
+  class M
+    class Options
+      attr_accessor bench: String?
+      attr_accessor benchtime: String?
+      attr_accessor timeout: String?
+      attr_accessor cpu: String?
+      attr_accessor thread: String?
+    end
+
+    @tests: Array[InternalTest]
+    @benchmarks: Array[InternalBenchmark]
+    @examples: Array[InternalExample]
+    @test_module: Module?
+    @opts: M::Options
+    @cpu_list: String?
+    @thread_list: String?
+
+    def initialize: (tests: Array[InternalTest], benchmarks: Array[InternalBenchmark], examples: Array[InternalExample], ?test_module: Module?, ?opts: Options) -> void
+    def run: () -> Integer
+
+    private
+
+    def run_tests: () -> bool
+    def run_benchmarks: () -> bool
+  end
+
+  class T < Common
+    @module: Module
+    @name: Symbol
+
+    def initialize: (Module test_module, Symbol name) -> void
+    def run: () -> void
+    def report: () -> void
+    def call: () -> void
+  end
+
+  class B < Common
+    class Options
+      attr_accessor procs: Integer
+      attr_accessor threads: Integer
+      attr_accessor benchtime: String?
+    end
+
+    @module: Module?
+    @name: Symbol?
+    @opts: B::Options
+    @timer_on: bool
+    @duration: Float
+
+    attr_accessor n: Integer
+
+    def initialize: (Module? benchmark_module, Symbol? name, ?B::Options opts) -> void
+    def start_timer: () -> void
+    def stop_timer: () -> void
+    def reset_timer: () -> void
+    def run: () ?{ (B) -> void } -> BenchmarkResult
+    def run_parallel: () { (PB) -> void } -> void
+
+    private
+
+    def run_n: (Integer n, ?Proc? block) -> void
+  end
+
+  class PB
+    @bn: Integer
+    def initialize: (bn: Integer) -> void
+    def next: () -> bool
+  end
+
+  class BenchmarkResult
+    attr_reader n: Integer    # int           // The number of iterations.
+    attr_reader t: Float      # time.Duration // The total time taken.
+    def initialize: (n: Integer, t: Float) -> void
+  end
+
+  class ExampleParser < Ripper
+    @in_def: bool
+    @has_output: bool
+    @output: String
+    attr_accessor examples: Array[ExampleOutput]
+  end
+
+  class OptionError < StandardError
+  end
+
+  class InternalTest
+    attr_accessor module: Module
+    attr_accessor name: Symbol
+  end
+
+  class InternalBenchmark
+    attr_accessor module: Module
+    attr_accessor name: Symbol
+  end
+
+  class InternalExample
+    attr_accessor module: Module
+    attr_accessor name: Symbol
+  end
+
+  class ExampleOutput
+    attr_accessor output: String
+    attr_accessor name: Symbol
+  end
+end

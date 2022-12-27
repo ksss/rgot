@@ -2,8 +2,6 @@
 
 module Rgot
   class PB
-    attr_accessor :bn
-
     def initialize(bn:)
       @bn = bn
     end
