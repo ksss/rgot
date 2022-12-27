@@ -77,7 +77,7 @@ module RgotTest
   end
 
   def test_main_method_return_code(t)
-    code = Rgot::M.new(tests: [], benchmarks: [], examples: [], test_module: nil).run
+    code = Rgot::M.new(tests: [], benchmarks: [], examples: [], test_module: RgotTest).run
     unless Integer === code
       t.error("Rgot::M#run return expect to exit code, got #{code}")
     end
@@ -100,14 +100,28 @@ module RgotTest
   end
 
   def test_rgot_benchmark(t)
-    result = Rgot.benchmark(benchtime: 0.1) { |b|
+    start = Time.now
+    last_n = 0
+    result = Rgot.benchmark(benchtime: 0.2) { |b|
       unless Rgot::B === b
         t.error("expect instance of Rgot::B got #{b.class}")
       end
       unless 0 < b.n
         t.error("b.n expect over 0 since loop times")
       end
+      sleep(b.n * 0.01)
+      last_n = b.n
     }
+    duration = (Time.now - start)
+    unless 0.2 < duration
+      t.error("too fast benchmark running time expect=0.2s got=#{duration}s")
+    end
+    unless duration < 5
+      t.error("too slow benchmark running time expect=5s got=#{duration}s")
+    end
+    unless 5 <= last_n
+      t.error("too few times last_n=#{last_n}")
+    end
     unless Rgot::BenchmarkResult === result
       t.error("expect instance of Rgot::BenchmarkResult got #{result.class}")
     end

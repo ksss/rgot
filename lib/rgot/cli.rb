@@ -117,7 +117,13 @@ module Rgot
         examples << Rgot::InternalExample.new(test_module, m)
       end
 
-      m = Rgot::M.new(test_module: test_module, tests: tests, benchmarks: benchmarks, examples: examples, opts: opts)
+      m = Rgot::M.new(
+        test_module: test_module,
+        tests: tests,
+        benchmarks: benchmarks,
+        examples: examples,
+        opts: opts
+      )
       if main
         main.module.extend main.module
         main.module.instance_method(:test_main).bind(main.module).call(m)
@@ -125,8 +131,6 @@ module Rgot
         m.run
       end
     end
-
-    private
 
     def find_toplevel_name(node)
       case node.type

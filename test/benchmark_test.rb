@@ -21,7 +21,7 @@ module BenchmarkTest
   def benchmark_parallel(b)
     b.run_parallel do |pb|
       while pb.next
-        fibo(27)
+        fibo(25)
       end
     end
   end
