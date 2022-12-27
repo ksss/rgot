@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rgot (1.1.0)
+    rgot (1.2.0)
 
 GEM
   remote: https://rubygems.org/
