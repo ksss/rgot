@@ -69,8 +69,8 @@ module Rgot
     @examples: Array[InternalExample]
     @test_module: Module?
     @opts: M::Options
-    @cpu_list: String?
-    @thread_list: String?
+    @cpu_list: Array[Integer]
+    @thread_list: Array[Integer]
 
     def initialize: (tests: Array[InternalTest], benchmarks: Array[InternalBenchmark], examples: Array[InternalExample], ?test_module: Module?, ?opts: Options) -> void
     def run: () -> Integer

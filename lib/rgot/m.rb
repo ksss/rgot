@@ -25,8 +25,8 @@ module Rgot
       @examples = examples
       @test_module = test_module
       @opts = opts
-      @cpu_list = nil
-      @thread_list = nil
+      @cpu_list = []
+      @thread_list = []
     end
 
     def run
@@ -143,13 +143,13 @@ module Rgot
         out, _ = capture do
           method.call
         end
-        file = method.source_location[0]
-        r = ExampleParser.new(File.read(file))
-        r.parse
-        e = r.examples.find { |re| re.name == example.name }
+        file = method.source_location&.[](0) or raise("bug")
+        example_parser = ExampleParser.new(File.read(file))
+        example_parser.parse
+        e = example_parser.examples.find { |er| er.name == example.name } or raise("bug")
 
         duration = Rgot.now - start
-        if e && e.output.strip != out.strip
+        if e.output.strip != out.strip
           printf("--- FAIL: %s (%.2fs)\n", e.name, duration)
           ok = false
           puts "got:"
