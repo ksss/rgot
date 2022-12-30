@@ -11,6 +11,8 @@ path: .gem_rbs_collection
 gems:
   - name: pathname
   - name: optparse
+  - name: timeout
+  - name: etc
 
   # Skip loading rbs gem's RBS.
   # It's unnecessary if you don't use rbs as a library.

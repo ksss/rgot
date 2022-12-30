@@ -101,7 +101,7 @@ module Rgot
       # internal_log -> synchronize -> internal_log -> other log -> running method
       c = caller[4]
       path = c.sub(/:.*/, '')
-      line = c.match(/:(\d+?):/)[1]
+      line = c.match(/:(\d+?):/)&.[](1)
       relative_path = Pathname.new(path).relative_path_from(Pathname.new(Dir.pwd)).to_s
       # Every line is indented at least 4 spaces.
       "    #{relative_path}:#{line}: #{str}\n"
