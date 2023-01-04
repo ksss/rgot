@@ -93,6 +93,33 @@ ok	FooTest	2.782s
 
 `b.n` is automatically adjusted.
 
+## Fuzzing
+
+```
+$ rgot target_file_test.rb --fuzz . --fuzztime 1
+```
+
+Fuzzing tests are also supported.
+Please refer to the gloang documentation for details.
+
+https://go.dev/security/fuzz/
+
+```ruby
+module FooTest
+  # To enable fuzzing, the method name
+  # should be prefixed with `fuzz`.
+  def fuzz_any_func(f)
+    f.add(5, "hello")
+    f.fuzz do |t, i, s|
+      out, err = foo(i, s)
+      if err != nil && out != ""
+        t.errorf("%s, %s", out, err)
+      end
+    end
+  end
+end
+```
+
 ## Example
 
 Rgot's example feature is the best and if you want to write the sample code of your library.
@@ -189,6 +216,8 @@ Method name should be set `test_*` for testing.
 
 And benchmark method should be set `benchmark_*`.
 
+And fuzz method should be set `fuzz_*`.
+
 And example method should be set `example_*`.
 
 ```ruby
@@ -197,6 +226,9 @@ module XxxTest
   end
 
   def benchmark_any_name(b)
+  end
+
+  def fuzz_any_name(f)
   end
 
   def example_any_name
@@ -218,6 +250,8 @@ Usage: rgot [options]
         --thread [count,...]         set thread counts of comma split
         --require [path]             load some code before running
         --load-path [path]           Specify $LOAD_PATH directory
+        --fuzz [regexp]              run the fuzz test matching `regexp`
+        --fuzztime [sec]             time to spend fuzzing; default is to run indefinitely
 ```
 
 ## Basic
@@ -308,33 +342,6 @@ $ rgot target_file_test.rb --timeout 3
 You can set timeout sec for testing (default 0).
 
 Fail testing and print raised exception message to STDERR if timeout.
-
-## Fuzzing
-
-```
-$ rgot target_file_test.rb --fuzz . --fuzztime 1
-```
-
-Fuzzing tests are also supported.
-Please refer to the gloang documentation for details.
-
-https://go.dev/security/fuzz/
-
-```ruby
-module FooTest
-  # To enable fuzzing, the method name
-  # should be prefixed with `fuzz`.
-  def fuzz_any_func(f)
-    f.add(5, "hello")
-    f.fuzz do |t, i, s|
-      out, err = foo(i, s)
-      if err != nil && out != ""
-        t.errorf("%s, %s", out, err)
-      end
-    end
-  end
-end
-```
 
 # Methods
 
@@ -569,12 +576,12 @@ end
 
 # TODO
 
-- [] Support to save and load fuzzing data
+- [ ] Support to save and load fuzzing data
 
 ## v2
 
-- [] Support sub testing
-- [] Fix duration argument unit
-- [] Refactoring
-  - [] Fix M#initialize argument
-  - [] Fix internal class API
+- [ ] Support sub testing
+- [ ] Fix duration argument unit
+- [ ] Refactoring
+  - [ ] Fix M#initialize argument
+  - [ ] Fix internal class API
