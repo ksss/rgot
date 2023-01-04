@@ -13,6 +13,7 @@ gems:
   - name: optparse
   - name: timeout
   - name: etc
+  - name: coverage
 
   # Skip loading rbs gem's RBS.
   # It's unnecessary if you don't use rbs as a library.

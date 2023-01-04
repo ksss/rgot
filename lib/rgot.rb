@@ -8,12 +8,14 @@ module Rgot
   autoload :B, 'rgot/b'
   autoload :PB, 'rgot/pb'
   autoload :BenchmarkResult, 'rgot/benchmark_result'
+  autoload :F, 'rgot/f'
   autoload :ExampleParser, 'rgot/example_parser'
 
   OptionError = Class.new(StandardError)
   InternalTest = Struct.new(:module, :name)
   InternalBenchmark = Struct.new(:module, :name)
   InternalExample = Struct.new(:module, :name)
+  InternalFuzzTarget = Struct.new(:module, :name)
   ExampleOutput = Struct.new(:name, :output)
 
   class << self

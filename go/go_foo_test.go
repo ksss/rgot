@@ -5,7 +5,9 @@ import (
 )
 
 func TestFoo1(t *testing.T) {
-	// t.Error("foo1")
+	t.Run("AAAAA", func(t *testing.T) {
+		t.Log("Sub log")
+	})
 }
 
 func TestFoo2(t *testing.T) {
