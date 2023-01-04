@@ -12,9 +12,15 @@ module Rgot
       :timeout,
       :cpu,
       :thread,
+      :fuzz,
+      :fuzztime,
     ); end
 
-    def initialize(tests:, benchmarks:, examples:, test_module: nil, opts: Options.new)
+    def initialize(tests:, benchmarks:, examples:, fuzz_targets: nil, test_module: nil, opts: Options.new)
+      unless fuzz_targets
+        raise "Require `fuzz_targets` keyword" if Gem::Version.new("2.0") <= Gem::Version.new(Rgot::VERSION)
+        warn "`Rgot::M#initialize` will require the `fuzz_targets` keyword in the next major version."
+      end
       unless test_module
         raise "Require `test_module` keyword" if Gem::Version.new("2.0") <= Gem::Version.new(Rgot::VERSION)
         warn "`Rgot::M#initialize` will require the `test_module` keyword in the next major version."
@@ -23,18 +29,30 @@ module Rgot
       @tests = tests
       @benchmarks = benchmarks
       @examples = examples
+      @fuzz_targets = fuzz_targets || []
       @test_module = test_module
       @opts = opts
+
       @cpu_list = []
       @thread_list = []
+      @fs = @fuzz_targets.map do |fuzz_target|
+        F.new(
+          fuzz_target: fuzz_target,
+          opts: F::Options.new(
+            fuzz: opts.fuzz,
+            fuzztime: opts.fuzztime,
+          )
+        )
+      end
     end
 
     def run
       duration = Rgot.now
       test_ok = false
+      fuzz_targets_ok = false
       example_ok = false
 
-      if @tests.empty? && @benchmarks.empty? && @examples.empty?
+      if @tests.empty? && @benchmarks.empty? && @examples.empty? && @fuzz_targets.empty?
         warn "rgot: warning: no tests to run"
       end
 
@@ -47,22 +65,29 @@ module Rgot
 
       Timeout.timeout(@opts.timeout.to_f) do
         test_ok = run_tests
+        fuzz_targets_ok = run_fuzz_tests
         example_ok = run_examples
       end
 
-      if !test_ok || !example_ok
+      if !test_ok || !example_ok || !fuzz_targets_ok
         puts "FAIL"
         puts "exit status 1"
         puts sprintf("%s\t%s\t%.3fs", "FAIL", @test_module, Rgot.now - duration)
-
-        1
-      else
-        puts "PASS"
-        run_benchmarks
-        puts sprintf("%s\t%s\t%.3fs", "ok  ", @test_module, Rgot.now - duration)
-
-        0
+        return 1
       end
+
+      if !run_fuzzing()
+        puts "FAIL"
+        puts "exit status 1"
+        puts sprintf("%s\t%s\t%.3fs", "FAIL", @test_module, Rgot.now - duration)
+        return 1
+      end
+
+      puts "PASS"
+      run_benchmarks
+      puts sprintf("%s\t%s\t%.3fs", "ok  ", @test_module, Rgot.now - duration)
+
+      0
     end
 
     private
@@ -90,9 +115,7 @@ module Rgot
           puts "=== RUN   #{test.name}"
         end
         t.run
-        if t.failed?
-          ok = false
-        end
+        ok = ok && !t.failed?
       end
       ok
     end
@@ -127,6 +150,50 @@ module Rgot
           end
         end
       end
+      ok
+    end
+
+    def run_fuzz_tests
+      ok = true
+      @fs.each do |f|
+        if Rgot.verbose?
+          if f.fuzz?
+            puts "=== FUZZ  #{f.name}"
+          else
+            puts "=== RUN   #{f.name}"
+          end
+        end
+        f.run_testing
+        ok = ok && !f.failed?
+      end
+      ok
+    end
+
+    def run_fuzzing
+      if @fuzz_targets.empty? || @opts.fuzz.nil?
+        return true
+      end
+
+      fuzzing_fs = @fs.select(&:fuzz?)
+
+      if fuzzing_fs.empty?
+        puts "rgot: warning: no fuzz tests to fuzz"
+        return true
+      end
+
+      if fuzzing_fs.length > 1
+        names = fuzzing_fs.map(&:name)
+        puts "rgot: will not fuzz, --fuzz matches more than one fuzz test: #{names.inspect}"
+        return false
+      end
+
+      ok = true
+
+      fuzzing_fs.each do |f|
+        f.run_fuzzing
+        ok = ok && !f.failed?
+      end
+
       ok
     end
 

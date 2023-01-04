@@ -77,7 +77,7 @@ module RgotTest
   end
 
   def test_main_method_return_code(t)
-    code = Rgot::M.new(tests: [], benchmarks: [], examples: [], test_module: RgotTest).run
+    code = Rgot::M.new(tests: [], benchmarks: [], examples: [], fuzz_targets: [], test_module: RgotTest).run
     unless Integer === code
       t.error("Rgot::M#run return expect to exit code, got #{code}")
     end
@@ -161,6 +161,8 @@ Usage: rgot [options]
         --thread [count,...]         set thread counts of comma split
         --require [path]             load some code before running
         --load-path [path]           Specify $LOAD_PATH directory
+        --fuzz [regexp]              run the fuzz test matching `regexp`
+        --fuzztime [sec]             time to spend fuzzing; default is to run indefinitely
 HELP
     if out != expect_out
       t.error("rgot -h README.md and test should be update")

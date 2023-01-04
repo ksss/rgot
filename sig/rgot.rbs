@@ -62,23 +62,37 @@ module Rgot
       attr_accessor timeout: String?
       attr_accessor cpu: String?
       attr_accessor thread: String?
+      attr_accessor fuzz: String?
+      attr_accessor fuzztime: String?
     end
 
     @tests: Array[InternalTest]
     @benchmarks: Array[InternalBenchmark]
     @examples: Array[InternalExample]
+    @fuzz_targets: Array[InternalFuzzTarget]
+    @fs: Array[F]
     @test_module: Module?
     @opts: M::Options
     @cpu_list: Array[Integer]
     @thread_list: Array[Integer]
 
-    def initialize: (tests: Array[InternalTest], benchmarks: Array[InternalBenchmark], examples: Array[InternalExample], ?test_module: Module?, ?opts: Options) -> void
+    def initialize: (
+      tests: Array[InternalTest],
+      benchmarks: Array[InternalBenchmark],
+      examples: Array[InternalExample],
+      fuzz_targets: Array[InternalFuzzTarget],
+      ?test_module: Module?,
+      ?opts: Options
+    ) -> void
     def run: () -> Integer
 
     private
 
     def run_tests: () -> bool
     def run_benchmarks: () -> bool
+    def run_fuzz_tests: () -> bool
+    def run_fuzzing: () -> bool
+    def run_examples: () -> bool
   end
 
   class T < Common
@@ -118,6 +132,57 @@ module Rgot
     def run_n: (Integer n, ?Proc? block) -> void
   end
 
+  class F < Common
+    class Options
+      attr_accessor fuzz: String?
+      attr_accessor fuzztime: String?
+      def initialize: (fuzz: String?, fuzztime: String?) -> void
+    end
+    class CorpusEntry
+      attr_accessor values: Array[untyped]
+      attr_accessor is_seed: bool
+      attr_accessor path: String
+      def initialize: (values: Array[untyped], is_seed: bool, path: String) -> void
+      def mutate_values: () -> Array[untyped]
+    end
+    class Coordinator
+      attr_accessor count: Integer
+      attr_accessor interesting_count: Integer
+      def initialize: (warmup_input_count: Integer) -> void
+      @warmup_input_count: Integer
+      @before_cov: Integer
+      @start_time: Float
+      @count: Integer
+      @interesting_count: Integer
+      @count_last_log: Integer
+      @time_last_log: Float
+      def start_logger: () -> void
+      def diff_coverage: () -> Integer
+      def log_stats: () -> void
+      private
+      def elapsed: () -> Integer
+    end
+    SUPPORTED_TYPES: Hash[untyped, ^(untyped) -> untyped]
+    @fuzz_target: InternalFuzzTarget
+    @fuzz_block: Proc?
+    @opts: F::Options
+    @corpus: Array[CorpusEntry]
+    @module: Module
+    attr_reader name: Symbol
+    def initialize: (fuzz_target: InternalFuzzTarget, opts: F::Options) -> void
+    def run: () -> void
+    def run_testing: () -> void
+    def run_fuzzing: () -> void
+    def add: (*untyped) -> void
+    def fuzz: () { (*untyped) -> void } -> void
+    def fuzz?: () -> bool
+    def report: () -> void
+
+    private
+
+    def call: () -> void
+  end
+
   class PB
     @bn: Integer
     def initialize: (bn: Integer) -> void
@@ -151,6 +216,11 @@ module Rgot
   end
 
   class InternalExample
+    attr_accessor module: Module
+    attr_accessor name: Symbol
+  end
+
+  class InternalFuzzTarget
     attr_accessor module: Module
     attr_accessor name: Symbol
   end
