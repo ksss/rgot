@@ -76,6 +76,25 @@ module RgotTest
     end
   end
 
+  def test_multi_module_pass(t)
+    cmd = "rgot test/multi_module_pass_test.rb -v"
+    out = `#{cmd}`
+    if /multi module test ok/ !~ out
+      t.error("expect output 'multi module test ok', but got '#{out}'")
+    end
+  end
+
+  def test_multi_module_fail(t)
+    cmd = "rgot test/multi_module_fail_test.rb -v"
+    out, err, status = Open3.capture3(cmd)
+    unless !status.success?
+      t.error("should be fail, but success")
+    end
+    unless err.include?("*Test module should be one for each file")
+      t.error("expect output '*Test module should be one for each file', but got '#{err}'")
+    end
+  end
+
   def test_main_method_return_code(t)
     code = Rgot::M.new(tests: [], benchmarks: [], examples: [], fuzz_targets: [], test_module: RgotTest).run
     unless Integer === code
