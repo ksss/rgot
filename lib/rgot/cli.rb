@@ -168,11 +168,13 @@ module Rgot
           find_toplevel_name(namespace)
         end
       when :BLOCK
-        module_node = node.children.find { |c| c.type == :MODULE }
-        unless module_node
-          raise "no module found"
+        module_nodes = node.children.select do |c|
+          c.type == :MODULE && find_toplevel_name(c).end_with?("Test")
         end
-        find_toplevel_name(module_node)
+        raise "no module found" if module_nodes.empty?
+        raise "*Test module should be one for each file" if 1 < module_nodes.length
+
+        find_toplevel_name(module_nodes.first)
       else
         raise node.type.to_s
       end
