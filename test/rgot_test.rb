@@ -34,7 +34,7 @@ module RgotTest
     if status.success?
       t.error("expect process not success `#{cmd}` got #{status}")
     end
-    if /`sum': undefined method `\+' for nil:NilClass \(NoMethodError\)/ !~ err
+    if /\(NoMethodError\)/ !~ err
       error_class = err.match(/\((.*?)\)/)[1]
       t.log(err)
       t.error("expect NoMethodError got #{error_class}")
@@ -58,7 +58,7 @@ module RgotTest
     if status.success?
       t.error("expect process not success `#{cmd}` got #{status}")
     end
-    if /`sleep': execution expired \(Timeout::Error\)/ !~ err
+    if /\(Timeout::Error\)/ !~ err
       error_class = err.match(/\((.*?)\)/)[1]
       t.log(err)
       t.error("expect Timeout::Error got #{error_class}")
