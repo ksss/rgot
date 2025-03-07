@@ -343,6 +343,64 @@ You can set timeout sec for testing (default 0).
 
 Fail testing and print raised exception message to STDERR if timeout.
 
+# Recommendation
+
+Set up Rakefile.
+
+```rb
+# Rakefile
+require "rake/testtask"
+Rake::TestTask.new do |task|
+  task.libs = %w[lib test]
+  task.test_files = FileList["lib/**/*_test.rb"]
+end
+```
+
+Set `test/test_helper.rb`.
+
+```rb
+# test/test_helper.rb
+require "rgot/cli"
+
+unless $PROGRAM_NAME.end_with?("/rgot")
+  at_exit do
+    exit Rgot::Cli.new(["-v", *ARGV]).run
+  end
+end
+```
+
+Place the test file in the same directory as the implementation file.
+Just like in golang.
+
+```console
+$ ls lib
+lib/foo.rb
+lib/foo_test.rb
+```
+
+Write your testing code.
+
+```rb
+# lib/foo_test.rb
+require 'test_helper'
+
+module FooTest
+  def test_foo(t)
+    # ...
+  end
+end
+```
+
+OK, You will be able to both run all tests with rake and specify one file to run.
+
+```console
+$ bundle exec rake test
+```
+
+```console
+$ bundle exec rgot lib/foo_test.rb
+```
+
 # Methods
 
 ## Rgot
