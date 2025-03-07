@@ -107,7 +107,7 @@ module Rgot
         require 'coverage'
         Coverage.start(oneshot_lines: true)
       end
-      load testing_file
+      require testing_file
 
       test_module = Object.const_get(test_module_name)
       tests = []
